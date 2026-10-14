@@ -20,6 +20,6 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Skip the admin panel, API, Next.js internals and files with an extension
-  matcher: ['/((?!admin|api|_next|.*\\..*).*)'],
+  // Skip the admin panel, APIs, the tracking API forwarder, Next.js internals and files with an extension
+  matcher: ['/((?!admin|api|tracking-api|_next|.*\\..*).*)'],
 }

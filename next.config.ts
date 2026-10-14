@@ -6,7 +6,15 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
+// Where /tracking-api/* is forwarded (used in dev and previews, where the API's CORS blocks the browser)
+const trackingUpstream = (
+  process.env.TRACKING_API_UPSTREAM || 'https://api.lomprayahcargo.com/api'
+).replace(/\/$/, '')
+
 const nextConfig: NextConfig = {
+  async rewrites() {
+    return [{ source: '/tracking-api/:path*', destination: `${trackingUpstream}/:path*` }]
+  },
   images: {
     localPatterns: [
       {

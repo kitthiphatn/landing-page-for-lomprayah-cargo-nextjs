@@ -13,8 +13,10 @@ export function CookieConsent({ t, message, policyUrl }: Props) {
   const [optional, setOptional] = useState(false)
 
   useEffect(() => {
+    // Consent lives in a cookie, readable only after hydration
     const saved = readConsent()
     if (saved) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- see above
       setOptional(saved.analytics)
     } else {
       setOpen(true)

@@ -17,6 +17,22 @@ npm run dev            # http://localhost:3000 และ http://localhost:3000/a
 
 ครั้งแรกที่เปิด `/admin` จะให้สร้างผู้ใช้คนแรก (ตั้ง role เป็น admin)
 
+### ทดสอบหน้าติดตามพัสดุโดยไม่ต่อ API จริง
+
+```bash
+npm run mock-api                      # API จำลองที่ http://localhost:4500/api
+# ใน .env ตั้ง TRACKING_API_UPSTREAM=http://localhost:4500/api แล้วรัน npm run dev
+```
+
+เลขตัวอย่าง: `LP-TAO-261005-0003` (อยู่บนเรือ), `LP-SMI-261012-0141` (ส่งสำเร็จ), `LP-CPN-261014-0027` (รอรับพัสดุ), `LP-PNG-261001-0009` (ตีกลับ)
+
+## หน้าติดตามพัสดุ
+
+`/th/track/เลข1,เลข2` ดึงข้อมูลจาก API ของระบบหลักผ่านเบราว์เซอร์ของลูกค้า แสดงรายการพัสดุพร้อม timeline, แผนที่เส้นทาง (OpenStreetMap) และการ์ดติดตามสด หน้านี้ตั้ง `noindex` เพราะมีข้อมูลลูกค้า (แบบปิดบังแล้ว)
+
+- บน `www.lomprayahcargo.com`: ตั้ง `NEXT_PUBLIC_TRACKING_API=https://api.lomprayahcargo.com/api` เบราว์เซอร์ลูกค้าจะเรียก API ตรง rate limit 60 ครั้ง/นาทีจะนับแยกต่อลูกค้า
+- โดเมนอื่น (dev, preview): เว้นว่างไว้ ระบบจะส่งผ่าน `/tracking-api` ของเว็บนี้ เพราะ API อนุญาต CORS เฉพาะ lomprayahcargo.com (ทุกคำขอจะนับ rate limit รวมกันที่ IP ของเซิร์ฟเวอร์)
+
 ## แก้อะไรได้จากหลังบ้าน
 
 | เมนู | ใช้ทำอะไร |
