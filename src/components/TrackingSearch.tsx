@@ -1,21 +1,13 @@
 'use client'
 
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import type { Locale } from '@/i18n/config'
 import type { Dictionary } from '@/i18n/dictionaries'
-
-export function parseTrackingNumbers(input: string): string[] {
-  return Array.from(
-    new Set(
-      input
-        .toUpperCase()
-        .split(/[\s,]+/)
-        .filter(Boolean),
-    ),
-  )
-}
+import { parseTrackingNumbers } from '@/lib/tracking/parse'
+import { clearRecent, readRecent } from '@/lib/tracking/recent'
 
 export function TrackingSearch({
   locale,
@@ -29,6 +21,9 @@ export function TrackingSearch({
   const router = useRouter()
   const [value, setValue] = useState(initial)
   const [error, setError] = useState('')
+  const [recent, setRecent] = useState<string[]>([])
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- recent searches live in browser storage, readable only after hydration
+  useEffect(() => setRecent(readRecent()), [])
 
   return (
     <form
@@ -71,6 +66,30 @@ export function TrackingSearch({
       <p id="tracking-hint" className={`text-sm ${error ? 'text-danger' : 'text-muted'}`}>
         {error || t.hint}
       </p>
+      {recent.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 text-sm">
+          <span className="text-muted">{t.recent}:</span>
+          {recent.map((n) => (
+            <Link
+              key={n}
+              href={`/${locale}/track/${encodeURIComponent(n)}`}
+              className="rounded-full bg-chip px-3 py-1 font-mono text-xs text-navy hover:brightness-95"
+            >
+              {n}
+            </Link>
+          ))}
+          <button
+            type="button"
+            onClick={() => {
+              clearRecent()
+              setRecent([])
+            }}
+            className="text-xs text-muted underline underline-offset-2"
+          >
+            {t.clearRecent}
+          </button>
+        </div>
+      )}
     </form>
   )
 }

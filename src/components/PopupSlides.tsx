@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { isWithinWindow } from '@/lib/schedule'
+
 export type PopupSlide = {
   src: string
   mobileSrc?: string | null
@@ -57,10 +59,9 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
   const count = slides.length
 
   useEffect(() => {
-    const now = Date.now()
-    if (startsAt && new Date(startsAt).getTime() > now) return
-    if (endsAt && new Date(endsAt).getTime() < now) return
-    if (!alreadySeen(version, frequency)) setOpen(true)
+    if (!isWithinWindow(startsAt, endsAt) || alreadySeen(version, frequency)) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- seen-state lives in browser storage, readable only after hydration
+    setOpen(true)
   }, [version, frequency, startsAt, endsAt])
 
   const close = useCallback(() => {

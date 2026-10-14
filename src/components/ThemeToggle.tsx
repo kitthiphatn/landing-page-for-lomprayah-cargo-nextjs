@@ -1,7 +1,7 @@
 'use client'
 
 import { useTheme } from 'next-themes'
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 
 export function ThemeToggle({
   labels,
@@ -9,8 +9,12 @@ export function ThemeToggle({
   labels: { light: string; dark: string; toggle: string }
 }) {
   const { resolvedTheme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
+  // The saved theme is only known in the browser, so render the neutral icon until hydrated
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  )
 
   const isDark = mounted && resolvedTheme === 'dark'
   return (
