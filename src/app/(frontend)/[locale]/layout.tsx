@@ -30,7 +30,7 @@ export async function generateMetadata({
   if (!isLocale(locale)) return {}
   const t = getDictionary(locale)
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'),
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3005'),
     title: { default: 'Lomprayah Cargo', template: '%s · Lomprayah Cargo' },
     description: t.hero.subtitle,
     alternates: { languages: { th: '/th', en: '/en' } },

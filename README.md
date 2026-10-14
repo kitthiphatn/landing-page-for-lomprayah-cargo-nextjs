@@ -12,7 +12,7 @@
 ```bash
 cp .env.example .env   # แล้วตั้ง PAYLOAD_SECRET
 npm install
-npm run dev            # http://localhost:3000 และ http://localhost:3000/admin
+npm run dev            # http://localhost:3005 และ http://localhost:3005/admin
 ```
 
 ครั้งแรกที่เปิด `/admin` จะให้สร้างผู้ใช้คนแรก (ตั้ง role เป็น admin)
@@ -31,7 +31,8 @@ npm run mock-api                      # API จำลองที่ http://loca
 `/th/track/เลข1,เลข2` ดึงข้อมูลจาก API ของระบบหลักผ่านเบราว์เซอร์ของลูกค้า แสดงรายการพัสดุพร้อม timeline, แผนที่เส้นทาง (OpenStreetMap) และการ์ดติดตามสด หน้านี้ตั้ง `noindex` เพราะมีข้อมูลลูกค้า (แบบปิดบังแล้ว)
 
 - บน `www.lomprayahcargo.com`: ตั้ง `NEXT_PUBLIC_TRACKING_API=https://api.lomprayahcargo.com/api` เบราว์เซอร์ลูกค้าจะเรียก API ตรง rate limit 60 ครั้ง/นาทีจะนับแยกต่อลูกค้า
-- โดเมนอื่น (dev, preview): เว้นว่างไว้ ระบบจะส่งผ่าน `/tracking-api` ของเว็บนี้ เพราะ API อนุญาต CORS เฉพาะ lomprayahcargo.com (ทุกคำขอจะนับ rate limit รวมกันที่ IP ของเซิร์ฟเวอร์)
+- เว็บจริงอยู่โดเมนอื่นที่ไม่ใช่ lomprayahcargo.com: ต้องเพิ่มโดเมนนั้นใน CORS ของ API ก่อน แล้วจึงตั้ง `NEXT_PUBLIC_TRACKING_API` ได้
+- dev, preview: เว้นว่างไว้ ระบบจะส่งผ่าน `/tracking-api` ของเว็บนี้ เพราะ API อนุญาต CORS เฉพาะ lomprayahcargo.com (ทุกคำขอจะนับ rate limit รวมกันที่ IP ของเซิร์ฟเวอร์)
 
 ## แก้อะไรได้จากหลังบ้าน
 
