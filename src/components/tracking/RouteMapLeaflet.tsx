@@ -86,7 +86,7 @@ export default function RouteMapLeaflet({
     <MapContainer
       center={center}
       zoom={9}
-      scrollWheelZoom={false}
+      scrollWheelZoom
       className="h-full w-full"
       attributionControl
     >
