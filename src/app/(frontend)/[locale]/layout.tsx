@@ -8,6 +8,7 @@ import { AnnouncementBar } from '@/components/AnnouncementBar'
 import { CookieConsent } from '@/components/CookieConsent'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
+import { PopupSlides, type PopupSlide } from '@/components/PopupSlides'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { isLocale, locales } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
@@ -39,6 +40,10 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const t = getDictionary(locale)
   const content = await getSiteContent(locale)
   const siteName = content?.settings.siteName || 'Lomprayah Cargo'
+  const popup = content?.popup
+  const popupSlides: PopupSlide[] = (popup?.enabled ? (popup.slides ?? []) : []).flatMap((s) =>
+    s.image && typeof s.image === 'object' && s.image.url ? [{ src: s.image.url, alt: s.image.alt || '', link: s.link }] : [],
+  )
   const brand = content?.settings.primaryColor && content.settings.primaryColor !== 'navy' ? `brand-${content.settings.primaryColor}` : ''
 
   return (
@@ -49,6 +54,16 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           <Header locale={locale} t={t} siteName={siteName} />
           <main>{children}</main>
           <Footer t={t} settings={content?.settings} siteName={siteName} />
+          {popupSlides.length > 0 && (
+            <PopupSlides
+              slides={popupSlides}
+              version={popup?.updatedAt ?? ''}
+              frequency={popup?.frequency === 'session' ? 'session' : 'day'}
+              startsAt={popup?.startsAt}
+              endsAt={popup?.endsAt}
+              labels={t.popup}
+            />
+          )}
           <CookieConsent t={t.cookie} message={content?.cookie.message} policyUrl={content?.cookie.policyUrl} />
         </ThemeProvider>
       </body>

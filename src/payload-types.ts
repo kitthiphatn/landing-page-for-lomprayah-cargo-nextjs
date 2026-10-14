@@ -90,11 +90,13 @@ export interface Config {
   globals: {
     'site-settings': SiteSetting;
     announcement: Announcement;
+    popup: Popup;
     'cookie-consent': CookieConsent;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     announcement: AnnouncementSelect<false> | AnnouncementSelect<true>;
+    popup: PopupSelect<false> | PopupSelect<true>;
     'cookie-consent': CookieConsentSelect<false> | CookieConsentSelect<true>;
   };
   locale: 'th' | 'en';
@@ -372,6 +374,31 @@ export interface Announcement {
   createdAt?: string | null;
 }
 /**
+ * Shown as a 16:9 image slider as soon as visitors open the site. Use 1600×900 px images.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "popup".
+ */
+export interface Popup {
+  id: number;
+  enabled?: boolean | null;
+  /**
+   * Visitors always see the popup again after the slides are changed.
+   */
+  frequency?: ('day' | 'session') | null;
+  startsAt?: string | null;
+  endsAt?: string | null;
+  slides?:
+    | {
+        image: number | Media;
+        link?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "cookie-consent".
  */
@@ -422,6 +449,26 @@ export interface AnnouncementSelect<T extends boolean = true> {
   link?: T;
   startsAt?: T;
   endsAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "popup_select".
+ */
+export interface PopupSelect<T extends boolean = true> {
+  enabled?: T;
+  frequency?: T;
+  startsAt?: T;
+  endsAt?: T;
+  slides?:
+    | T
+    | {
+        image?: T;
+        link?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

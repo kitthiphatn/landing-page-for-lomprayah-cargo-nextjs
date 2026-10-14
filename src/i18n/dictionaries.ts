@@ -32,6 +32,7 @@ const th = {
     optionalDesc: 'นับผู้เข้าชมและวัดผลโฆษณา คุกกี้ที่จำเป็นต่อการใช้งานเปิดอยู่เสมอ',
     reopen: 'ตั้งค่าคุกกี้',
   },
+  popup: { title: 'ประกาศ', close: 'ปิด', prev: 'รูปก่อนหน้า', next: 'รูปถัดไป', goTo: 'ไปที่รูป' },
   footer: {
     rights: 'สงวนลิขสิทธิ์',
   },
@@ -71,6 +72,7 @@ const en: Dictionary = {
     optionalDesc: 'Count visits and measure ads. Cookies the site needs to work are always on.',
     reopen: 'Cookie settings',
   },
+  popup: { title: 'Announcement', close: 'Close', prev: 'Previous image', next: 'Next image', goTo: 'Go to image' },
   footer: {
     rights: 'All rights reserved',
   },

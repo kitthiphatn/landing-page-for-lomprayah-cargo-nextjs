@@ -12,6 +12,7 @@ import { Media } from './collections/Media'
 import { SiteSettings } from './globals/SiteSettings'
 import { Announcement } from './globals/Announcement'
 import { CookieConsent } from './globals/CookieConsent'
+import { Popup } from './globals/Popup'
 import { defaultLocale } from './i18n/config'
 import { migrations } from './migrations'
 
@@ -43,7 +44,7 @@ export default buildConfig({
     fallback: true,
   },
   collections: [Users, Media],
-  globals: [SiteSettings, Announcement, CookieConsent],
+  globals: [SiteSettings, Announcement, Popup, CookieConsent],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
