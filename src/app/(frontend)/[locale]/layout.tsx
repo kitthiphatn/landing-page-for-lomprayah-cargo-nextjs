@@ -15,6 +15,17 @@ import { getDictionary } from '@/i18n/dictionaries'
 import { isPreview } from '@/lib/content'
 import { getSiteContent } from '@/lib/payload'
 
+// Ship icon in the brand navy, used until a favicon is uploaded in Site settings
+const DEFAULT_ICON =
+  'data:image/svg+xml,' +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34"><rect width="34" height="34" rx="7" fill="#132968"/><g fill="#fff"><path d="M4 19h26l-4 7H8z"/><rect x="10" y="12" width="12" height="6" rx="1"/><rect x="14" y="7" width="4" height="5"/></g></svg>',
+  )
+
+function mediaUrl(m: unknown): string | null {
+  return m && typeof m === 'object' && 'url' in m && typeof m.url === 'string' ? m.url : null
+}
+
 // Refresh at least once a minute; admin edits also refresh immediately via the globals' hooks
 export const revalidate = 60
 
@@ -30,7 +41,10 @@ export async function generateMetadata({
   const { locale } = await params
   if (!isLocale(locale)) return {}
   const t = getDictionary(locale)
+  const content = await getSiteContent(locale)
+  const favicon = mediaUrl(content?.settings.favicon)
   return {
+    icons: favicon ? { icon: favicon, apple: favicon } : { icon: DEFAULT_ICON },
     metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3005'),
     title: { default: 'Lomprayah Cargo', template: '%s · Lomprayah Cargo' },
     description: t.hero.subtitle,
@@ -52,6 +66,8 @@ export default async function LocaleLayout({
   const content = await getSiteContent(locale)
   const preview = await isPreview()
   const siteName = content?.settings.siteName || 'Lomprayah Cargo'
+  const logoLight = mediaUrl(content?.settings.logo)
+  const logo = logoLight ? { light: logoLight, dark: mediaUrl(content?.settings.logoDark) } : null
   const popup = content?.popup
   const popupSlides: PopupSlide[] = (popup?.enabled ? (popup.slides ?? []) : []).flatMap((s) =>
     s.image && typeof s.image === 'object' && s.image.url
@@ -84,7 +100,7 @@ export default async function LocaleLayout({
             </div>
           )}
           <AnnouncementBar data={content?.announcement} />
-          <Header locale={locale} t={t} siteName={siteName} />
+          <Header locale={locale} t={t} siteName={siteName} logo={logo} />
           <main>{children}</main>
           <Footer locale={locale} t={t} settings={content?.settings} siteName={siteName} />
           {popupSlides.length > 0 && (

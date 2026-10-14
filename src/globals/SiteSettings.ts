@@ -24,6 +24,36 @@ export const SiteSettings: GlobalConfig = {
       label: { th: 'โลโก้', en: 'Logo' },
       type: 'upload',
       relationTo: 'media',
+      admin: {
+        description: {
+          th: 'แสดงที่หัวเว็บแทนไอคอนและชื่อเว็บ ใช้ PNG พื้นใส หรือ SVG สูงอย่างน้อย 80px',
+          en: 'Shown in the header instead of the icon and site name. Use a transparent PNG or SVG, at least 80px tall.',
+        },
+      },
+    },
+    {
+      name: 'logoDark',
+      label: { th: 'โลโก้สำหรับโหมดมืด', en: 'Logo for dark mode' },
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: {
+          th: 'ไม่บังคับ ใช้เมื่อโลโก้ปกติเป็นสีเข้มจนมองไม่เห็นบนพื้นดำ',
+          en: 'Optional. Use when the normal logo is too dark to see on a dark background.',
+        },
+      },
+    },
+    {
+      name: 'favicon',
+      label: { th: 'ไอคอนแท็บเบราว์เซอร์ (favicon)', en: 'Browser tab icon (favicon)' },
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: {
+          th: 'รูปสี่เหลี่ยมจัตุรัส PNG หรือ SVG ขนาด 512×512px ใช้เป็นไอคอนบนแท็บและหน้าจอมือถือด้วย',
+          en: 'A square PNG or SVG, 512×512px. Also used as the phone home-screen icon.',
+        },
+      },
     },
     {
       name: 'primaryColor',
