@@ -86,7 +86,7 @@ export default function BranchMapLeaflet({
     <MapContainer
       center={[9.75, 99.9]}
       zoom={8}
-      scrollWheelZoom={false}
+      scrollWheelZoom
       className="h-full w-full"
       attributionControl
     >
