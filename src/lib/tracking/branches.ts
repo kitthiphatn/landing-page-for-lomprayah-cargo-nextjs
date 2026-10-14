@@ -8,9 +8,10 @@ export function branchTitle(b: Branch, locale: Locale): string {
   return (locale === 'en' && b.nameEn) || b.name
 }
 
-// The API has no province field; `branchKind` values look like `gulf_island` or `mainland`
+// The API has no province field. `branchKind` is one of mainland, gulf_hub, gulf_island,
+// sea_terminus or andaman_road; only gulf_island is an island, and any future value counts as mainland
 export function branchGroup(b: Branch): BranchGroup {
-  return b.branchKind?.includes('island') ? 'island' : 'mainland'
+  return b.branchKind === 'gulf_island' ? 'island' : 'mainland'
 }
 
 export function hasCoords(b: Branch): b is Branch & { latitude: number; longitude: number } {
@@ -18,7 +19,7 @@ export function hasCoords(b: Branch): b is Branch & { latitude: number; longitud
 }
 
 const DAY_NAMES: Record<Locale, string[]> = {
-  // operatingHours.days uses 1 = Monday ... 7 = Sunday
+  // operatingHours.days is the ISO weekday: 1 = Monday ... 7 = Sunday
   th: ['จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.', 'อา.'],
   en: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
 }
