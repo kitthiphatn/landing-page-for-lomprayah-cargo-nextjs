@@ -1,0 +1,102 @@
+@import 'tailwindcss';
+@import '@fontsource/anuphan/500.css';
+@import '@fontsource/anuphan/600.css';
+@import '@fontsource/anuphan/700.css';
+@import '@fontsource/ibm-plex-sans-thai/400.css';
+@import '@fontsource/ibm-plex-sans-thai/500.css';
+@import '@fontsource/ibm-plex-sans-thai/600.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
+/* Dark mode follows the `dark` class that next-themes puts on <html> */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Brand tokens: Lomprayah navy, sea teal, sun amber */
+:root {
+  --bg: #f5f7fb;
+  --surface: #ffffff;
+  --fg: #14213d;
+  --muted: #5b6782;
+  --line: #dde3ef;
+  --chip: #e8eefb;
+  --navy: #132968;
+  --sea: #0e7c86;
+  --sun: #f2a516;
+  --ok: #1d8a4e;
+  --danger: #c23b3b;
+}
+.dark {
+  --bg: #0c1328;
+  --surface: #141d38;
+  --fg: #e7ecf8;
+  --muted: #9aa6c4;
+  --line: #26314f;
+  --chip: #1d2a4e;
+  --navy: #8fa8f0;
+  --sea: #4fc3cc;
+  --sun: #f5b93d;
+  --ok: #4cc58a;
+  --danger: #ef7b7b;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-chip: var(--chip);
+  --color-navy: var(--navy);
+  --color-sea: var(--sea);
+  --color-sun: var(--sun);
+  --color-ok: var(--ok);
+  --color-danger: var(--danger);
+  --font-display: 'Anuphan', 'IBM Plex Sans Thai', system-ui, sans-serif;
+  --font-sans: 'IBM Plex Sans Thai', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+}
+body {
+  font-family: var(--font-sans);
+  line-height: 1.65;
+}
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  text-wrap: balance;
+}
+:focus-visible {
+  outline: 2px solid var(--sun);
+  outline-offset: 2px;
+}
+/* Containers focused by script (e.g. an opened dialog) don't need a ring */
+[tabindex='-1']:focus-visible {
+  outline: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Primary color picked in the admin (Site settings) */
+.brand-sea {
+  --navy: #0e6670;
+}
+.dark .brand-sea {
+  --navy: #4fc3cc;
+}
+.brand-amber {
+  --navy: #9a5b00;
+}
+.dark .brand-amber {
+  --navy: #f5b93d;
+}
