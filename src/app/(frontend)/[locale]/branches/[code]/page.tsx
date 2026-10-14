@@ -4,16 +4,19 @@ import { notFound } from 'next/navigation'
 
 import { BranchCard } from '@/components/branches/BranchCard'
 import { BranchMap } from '@/components/branches/BranchMap'
+import { RouteCard } from '@/components/content/RouteCard'
 import { TrackingSearch } from '@/components/TrackingSearch'
-import { isLocale, locales, type Locale } from '@/i18n/config'
+import { isLocale, type Locale } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
 import {
+  branchNames,
   branchTitle,
   directionsUrl,
   distanceKm,
   formatHours,
   hasCoords,
 } from '@/lib/tracking/branches'
+import { listRoutes } from '@/lib/content'
 import { fetchBranches } from '@/lib/tracking/server'
 import type { Branch } from '@/lib/tracking/types'
 
@@ -21,10 +24,10 @@ export const revalidate = 3600
 
 type Params = Promise<{ locale: string; code: string }>
 
-// Pre-render every branch when the API is reachable at build time; others render on first visit
-export async function generateStaticParams() {
-  const branches = (await fetchBranches()) ?? []
-  return locales.flatMap((locale) => branches.map((b) => ({ locale, code: b.code })))
+// Branch pages render on their first visit and are then cached, so a build never depends on the
+// tracking API being reachable
+export function generateStaticParams() {
+  return []
 }
 
 async function findBranch(code: string) {
@@ -88,6 +91,11 @@ export default async function BranchPage({ params }: { params: Params }) {
   const t = dict.branches
   const hours = formatHours(b.operatingHours, locale, t.everyDay)
   const subtitle = locale === 'en' ? b.name : b.nameEn
+
+  const routes = await listRoutes(locale, {
+    or: [{ fromCode: { equals: b.code } }, { toCode: { equals: b.code } }],
+  })
+  const names = branchNames(branches, locale)
 
   const nearby = hasCoords(b)
     ? branches
@@ -210,6 +218,17 @@ export default async function BranchPage({ params }: { params: Params }) {
           </div>
         </div>
       </div>
+
+      {routes.length > 0 && (
+        <section className="grid gap-3">
+          <h2 className="font-display text-lg font-semibold">{dict.routes.fromBranch}</h2>
+          <div className="grid gap-3 md:grid-cols-3">
+            {routes.map((r) => (
+              <RouteCard key={r.id} route={r} names={names} locale={locale} t={dict.routes} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {nearby.length > 0 && (
         <section className="grid gap-3">

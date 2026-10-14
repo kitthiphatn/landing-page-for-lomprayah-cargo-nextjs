@@ -51,3 +51,7 @@ export function matchesQuery(b: Branch, q: string): boolean {
   if (!needle) return true
   return [b.code, b.name, b.nameEn, b.address].some((v) => v?.toLowerCase().includes(needle))
 }
+
+export function branchNames(branches: Branch[] | null, locale: Locale): Map<string, string> {
+  return new Map((branches ?? []).map((b) => [b.code, branchTitle(b, locale)]))
+}
