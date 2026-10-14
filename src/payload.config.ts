@@ -1,5 +1,5 @@
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { BlocksFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { en } from '@payloadcms/translations/languages/en'
 import { th } from '@payloadcms/translations/languages/th'
 import path from 'path'
@@ -21,6 +21,7 @@ import { HomeSections } from './globals/HomeSections'
 import { AboutPage } from './globals/AboutPage'
 import { defaultLocale } from './i18n/config'
 import { migrations } from './migrations'
+import { HtmlBlock } from './blocks/HtmlBlock'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -51,7 +52,9 @@ export default buildConfig({
   },
   collections: [Posts, Routes, Faqs, Banners, Media, Users],
   globals: [SiteSettings, HomeSections, AboutPage, Announcement, Popup, CookieConsent],
-  editor: lexicalEditor(),
+  editor: lexicalEditor({
+    features: ({ defaultFeatures }) => [...defaultFeatures, BlocksFeature({ blocks: [HtmlBlock] })],
+  }),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
