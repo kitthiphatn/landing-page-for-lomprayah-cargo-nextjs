@@ -406,22 +406,19 @@ async function seedNews(payload: Payload) {
 async function seedContact(payload: Payload) {
   const current = await payload.findGlobal({ slug: 'site-settings', locale: 'th' })
   const c = current.contact ?? {}
-  const shared = {
-    phone: '089 873 0008-9',
-    lineId: '@pnd0714w',
-    lineUrl: 'https://line.me/ti/p/~@pnd0714w',
-    whatsappUrl: 'https://wa.me/66653509040',
+  // Phone, LINE, WhatsApp and hours on lomprayah.com belong to the ferry
+  // booking team, so they are left for staff to fill in under Site settings.
+  const socials = {
     facebookUrl: 'https://www.facebook.com/lomprayah',
     instagramUrl: 'https://www.instagram.com/lomprayahcatamaran',
     tiktokUrl: 'https://www.tiktok.com/@lomprayah',
     youtubeUrl: 'https://www.youtube.com/@LomprayahCatamaran-YOUTUBE/videos',
   }
   const fill = Object.fromEntries(
-    Object.entries(shared).filter(([k]) => isEmpty(c[k as keyof typeof c])),
+    Object.entries(socials).filter(([k]) => isEmpty(c[k as keyof typeof c])),
   )
   const th = {
     ...fill,
-    ...(isEmpty(c.hours) && { hours: 'ทุกวัน 08:00–20:00 น.' }),
     ...(isEmpty(c.address) && { address: '26/61 หมู่ 4 ต.แม่น้ำ อ.เกาะสมุย จ.สุราษฎร์ธานี 84330' }),
   }
   await payload.updateGlobal({
@@ -441,7 +438,6 @@ async function seedContact(payload: Payload) {
     data: {
       contact: {
         ...ce,
-        ...(isEmpty(ce.hours) && { hours: 'Daily 08:00–20:00' }),
         ...(isEmpty(ce.address) && {
           address: '26/61 Moo 4, Maenam, Koh Samui, Surat Thani 84330',
         }),
