@@ -54,6 +54,8 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
+    // Regenerate only with `npm run generate:types`, so `npm run dev` doesn't leave a changed file
+    autoGenerate: false,
   },
   // SQLite file lives in this site's own folder, so deploying never touches other sites' databases
   db: sqliteAdapter({
