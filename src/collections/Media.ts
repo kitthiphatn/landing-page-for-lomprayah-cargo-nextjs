@@ -19,7 +19,8 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
-    // Stored inside this site's folder (ignored by git; back it up with the database)
-    staticDir: 'media',
+    // Stored inside this site's folder (ignored by git; back it up with the database).
+    // On the server MEDIA_DIR points outside the app folder, so a new release keeps uploads.
+    staticDir: process.env.MEDIA_DIR || 'media',
   },
 }

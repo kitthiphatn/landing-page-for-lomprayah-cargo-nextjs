@@ -6,6 +6,7 @@ out
 *.db
 *.db-journal
 /media
+/media-production
 next-env.d.ts
 *.tsbuildinfo
 .DS_Store

@@ -12,6 +12,8 @@ const trackingUpstream = (
 ).replace(/\/$/, '')
 
 const nextConfig: NextConfig = {
+  // Self-contained server (`.next/standalone/server.js`) that Plesk runs without `npm install`
+  output: 'standalone',
   async rewrites() {
     return [{ source: '/tracking-api/:path*', destination: `${trackingUpstream}/:path*` }]
   },

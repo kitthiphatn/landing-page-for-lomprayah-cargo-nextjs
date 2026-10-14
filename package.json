@@ -15,7 +15,8 @@
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "mock-api": "node scripts/mock-tracking-api.mjs",
-    "seed": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/seed-lomprayah.ts"
+    "seed": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/seed-lomprayah.ts",
+    "seed:production": "cross-env NODE_ENV=production DATABASE_URL=file:./data/production.db MEDIA_DIR=./media-production NODE_OPTIONS=--no-deprecation payload run scripts/seed-lomprayah.ts"
   },
   "dependencies": {
     "@fontsource/anuphan": "5.3.0",
