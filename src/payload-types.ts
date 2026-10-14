@@ -67,8 +67,12 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
+    posts: Post;
+    routes: Route;
+    faqs: Faq;
+    banners: Banner;
     media: Media;
+    users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -76,8 +80,12 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
+    routes: RoutesSelect<false> | RoutesSelect<true>;
+    faqs: FaqsSelect<false> | FaqsSelect<true>;
+    banners: BannersSelect<false> | BannersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -89,12 +97,16 @@ export interface Config {
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('th' | 'en') | ('th' | 'en')[];
   globals: {
     'site-settings': SiteSetting;
+    'home-sections': HomeSection;
+    'about-page': AboutPage;
     announcement: Announcement;
     popup: Popup;
     'cookie-consent': CookieConsent;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'home-sections': HomeSectionsSelect<false> | HomeSectionsSelect<true>;
+    'about-page': AboutPageSelect<false> | AboutPageSelect<true>;
     announcement: AnnouncementSelect<false> | AnnouncementSelect<true>;
     popup: PopupSelect<false> | PopupSelect<true>;
     'cookie-consent': CookieConsentSelect<false> | CookieConsentSelect<true>;
@@ -129,6 +141,164 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  /**
+   * Lowercase letters, numbers and dashes, e.g. samui-to-koh-tao
+   */
+  slug: string;
+  /**
+   * Set a future date to schedule; the post appears on its own at that time.
+   */
+  publishedAt: string;
+  category: 'news' | 'announcement' | 'promotion' | 'travel' | 'tips';
+  cover?: (number | null) | Media;
+  excerpt?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Shows a "Read more" button to the full article, e.g. on lomprayah.com
+   */
+  sourceUrl?: string | null;
+  /**
+   * Optional; the title and summary are used when empty.
+   */
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "routes".
+ */
+export interface Route {
+  id: number;
+  title: string;
+  /**
+   * Lowercase letters, numbers and dashes, e.g. samui-to-koh-tao
+   */
+  slug: string;
+  /**
+   * Branch code from the main system, e.g. USM, TAO, CPN (listed on /en/branches)
+   */
+  fromCode: string;
+  /**
+   * Branch code from the main system, e.g. USM, TAO, CPN (listed on /en/branches)
+   */
+  toCode: string;
+  transitTime?: string | null;
+  priceFrom?: string | null;
+  summary?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  faqs?: (number | Faq)[] | null;
+  featured?: boolean | null;
+  order?: number | null;
+  /**
+   * Optional; the title and summary are used when empty.
+   */
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqs".
+ */
+export interface Faq {
+  id: number;
+  question: string;
+  answer: string;
+  category: 'shipping' | 'tracking' | 'payment' | 'general';
+  showOnHome?: boolean | null;
+  /**
+   * Lower numbers come first
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Shown below the tracking box on the homepage. Use 1200×400 px images (3:1).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "banners".
+ */
+export interface Banner {
+  id: number;
+  /**
+   * Used as the image description
+   */
+  title: string;
+  image: number | Media;
+  link?: string | null;
+  enabled?: boolean | null;
+  startsAt?: string | null;
+  endsAt?: string | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -157,25 +327,6 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -199,12 +350,28 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: number | User;
+        relationTo: 'posts';
+        value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'routes';
+        value: number | Route;
+      } | null)
+    | ({
+        relationTo: 'faqs';
+        value: number | Faq;
+      } | null)
+    | ({
+        relationTo: 'banners';
+        value: number | Banner;
       } | null)
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -250,6 +417,103 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  publishedAt?: T;
+  category?: T;
+  cover?: T;
+  excerpt?: T;
+  content?: T;
+  sourceUrl?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "routes_select".
+ */
+export interface RoutesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  fromCode?: T;
+  toCode?: T;
+  transitTime?: T;
+  priceFrom?: T;
+  summary?: T;
+  content?: T;
+  faqs?: T;
+  featured?: T;
+  order?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqs_select".
+ */
+export interface FaqsSelect<T extends boolean = true> {
+  question?: T;
+  answer?: T;
+  category?: T;
+  showOnHome?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "banners_select".
+ */
+export interface BannersSelect<T extends boolean = true> {
+  title?: T;
+  image?: T;
+  link?: T;
+  enabled?: T;
+  startsAt?: T;
+  endsAt?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
@@ -272,24 +536,6 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -345,7 +591,13 @@ export interface SiteSetting {
     lineId?: string | null;
     lineUrl?: string | null;
     email?: string | null;
+    whatsappUrl?: string | null;
     facebookUrl?: string | null;
+    instagramUrl?: string | null;
+    tiktokUrl?: string | null;
+    youtubeUrl?: string | null;
+    hours?: string | null;
+    address?: string | null;
   };
   hero?: {
     title?: string | null;
@@ -353,6 +605,68 @@ export interface SiteSetting {
     background?: (number | null) | Media;
   };
   footerNote?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-sections".
+ */
+export interface HomeSection {
+  id: number;
+  services?:
+    | {
+        icon?: ('boat' | 'truck' | 'box' | 'clock' | 'shield' | 'store') | null;
+        title: string;
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  showRoutes?: boolean | null;
+  showNews?: boolean | null;
+  showFaq?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-page".
+ */
+export interface AboutPage {
+  id: number;
+  title?: string | null;
+  intro?: string | null;
+  image?: (number | null) | Media;
+  stats?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Optional; the title and summary are used when empty.
+   */
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -428,7 +742,13 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         lineId?: T;
         lineUrl?: T;
         email?: T;
+        whatsappUrl?: T;
         facebookUrl?: T;
+        instagramUrl?: T;
+        tiktokUrl?: T;
+        youtubeUrl?: T;
+        hours?: T;
+        address?: T;
       };
   hero?:
     | T
@@ -438,6 +758,53 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         background?: T;
       };
   footerNote?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-sections_select".
+ */
+export interface HomeSectionsSelect<T extends boolean = true> {
+  services?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  showRoutes?: T;
+  showNews?: T;
+  showFaq?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-page_select".
+ */
+export interface AboutPageSelect<T extends boolean = true> {
+  title?: T;
+  intro?: T;
+  image?: T;
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  content?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

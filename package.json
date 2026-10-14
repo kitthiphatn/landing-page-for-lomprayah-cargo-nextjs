@@ -14,7 +14,8 @@
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
-    "mock-api": "node scripts/mock-tracking-api.mjs"
+    "mock-api": "node scripts/mock-tracking-api.mjs",
+    "seed": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/seed-lomprayah.ts"
   },
   "dependencies": {
     "@fontsource/anuphan": "5.3.0",

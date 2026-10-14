@@ -13,6 +13,8 @@ export type BranchMapProps = {
   user?: { lat: number; lng: number } | null
   onSelect?: (code: string) => void
   zoom?: number
+  // Keep every pin's name visible, for maps with only a few pins
+  labels?: boolean
 }
 
 type LatLng = [number, number]
@@ -72,7 +74,14 @@ function Camera({ pins, selected, user, zoom }: Omit<BranchMapProps, 'onSelect'>
   return null
 }
 
-export default function BranchMapLeaflet({ pins, selected, user, onSelect, zoom }: BranchMapProps) {
+export default function BranchMapLeaflet({
+  pins,
+  selected,
+  user,
+  onSelect,
+  zoom,
+  labels,
+}: BranchMapProps) {
   return (
     <MapContainer
       center={[9.75, 99.9]}
@@ -88,6 +97,7 @@ export default function BranchMapLeaflet({ pins, selected, user, onSelect, zoom 
       <Camera pins={pins} selected={selected} user={user} zoom={zoom} />
       {pins.map((p) => {
         const active = p.code === selected
+        const permanent = active || Boolean(labels)
         return (
           <CircleMarker
             key={p.code}
@@ -102,7 +112,7 @@ export default function BranchMapLeaflet({ pins, selected, user, onSelect, zoom 
             eventHandlers={onSelect ? { click: () => onSelect(p.code) } : undefined}
           >
             {/* Leaflet reads `permanent` only on mount, so remount the tooltip when it changes */}
-            <Tooltip key={String(active)} direction="top" permanent={active} offset={[0, -6]}>
+            <Tooltip key={String(permanent)} direction="top" permanent={permanent} offset={[0, -6]}>
               {p.name}
             </Tooltip>
           </CircleMarker>
