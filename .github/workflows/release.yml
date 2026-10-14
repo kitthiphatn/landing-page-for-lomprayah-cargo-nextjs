@@ -1,0 +1,64 @@
+# Builds the site on GitHub (not on the Plesk server, so other sites there never slow down)
+# and publishes a ready-to-run package as a GitHub release. The server then only downloads
+# and unpacks it: see docs/deploy-plesk.md.
+name: Release build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # Build-time values baked into the pages. Override with repository variables if the domain changes.
+      NEXT_PUBLIC_SERVER_URL: ${{ vars.NEXT_PUBLIC_SERVER_URL || 'https://www.lomprayahcargo.com' }}
+      NEXT_PUBLIC_TRACKING_API: ${{ vars.NEXT_PUBLIC_TRACKING_API || 'https://api.lomprayahcargo.com/api' }}
+      TRACKING_API_UPSTREAM: ${{ vars.TRACKING_API_UPSTREAM || 'https://api.lomprayahcargo.com/api' }}
+      # Throwaway database and secret used only while building; the server keeps its own
+      DATABASE_URL: file:/tmp/build.db
+      PAYLOAD_SECRET: build-only-not-used-on-the-server
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run build
+
+      - name: Package
+        run: |
+          set -euo pipefail
+          out=release/lp-cargo-web
+          mkdir -p "$out"
+          cp -r .next/standalone/. "$out/"
+          cp -r .next/static "$out/.next/static"
+          # Plesk serves static files from the document root; Next serves everything itself
+          mkdir -p "$out/public" "$out/tmp"
+          echo "${GITHUB_SHA}" > "$out/RELEASE"
+          tar -czf release/lp-cargo-web.tar.gz -C "$out" .
+          ls -lh release/lp-cargo-web.tar.gz
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="build-${GITHUB_RUN_NUMBER}"
+          gh release create "$tag" release/lp-cargo-web.tar.gz \
+            --target "$GITHUB_SHA" \
+            --title "Build ${GITHUB_RUN_NUMBER}" \
+            --notes "Built from ${GITHUB_SHA::7}. Deploy with scripts/plesk/deploy.sh." \
+            --latest

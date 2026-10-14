@@ -75,10 +75,10 @@ npm run generate:types
 
 ## Deploy บน Plesk (ไม่กระทบเว็บอื่น)
 
-1. สร้างโดเมน/subdomain ของเว็บนี้แยก แล้วเปิด Node.js สำหรับโดเมนนี้ (Node 20 ขึ้นไป) ไม่ต้องเปลี่ยน Node ของทั้งเซิร์ฟเวอร์
-2. Build บนเครื่องตัวเองหรือ GitHub Actions (`npm ci && npm run build`) เพื่อไม่ให้กิน RAM ของเซิร์ฟเวอร์ แล้วอัปโหลดทั้งโฟลเดอร์ (รวม `.next`)
-3. ตั้ง Environment variables ใน Plesk ตาม `.env.example` (ใช้ `PAYLOAD_SECRET` ค่าใหม่ที่สุ่มเอง)
-4. Application startup: `npm start` (หรือชี้ startup file ไปที่ `node_modules/next/dist/bin/next` พร้อม argument `start`)
-5. Backup ไฟล์ `data/*.db` และโฟลเดอร์ `media/` เป็นระยะ
+ทุกครั้งที่ merge เข้า `main` GitHub Actions จะ build เว็บแล้วเก็บไฟล์พร้อมรันไว้ใน Releases บนเซิร์ฟเวอร์รันคำสั่งเดียวเพื่อดาวน์โหลดและรีสตาร์ทเฉพาะเว็บนี้
 
-รายละเอียดการตั้งค่า Plesk จะยืนยันอีกครั้งตอน deploy จริง
+```bash
+bash /var/www/vhosts/lomprayahcargo.com/cargo-web/deploy.sh /var/www/vhosts/lomprayahcargo.com/cargo-web
+```
+
+ขั้นตอนตั้งค่าครั้งแรก, ค่า environment ใน Plesk, การย้อนเวอร์ชัน และ backup อยู่ใน [docs/deploy-plesk.md](docs/deploy-plesk.md)
