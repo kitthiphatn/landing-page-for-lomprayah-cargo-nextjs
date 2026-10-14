@@ -19,6 +19,15 @@ cargo-web/
 
 ## ตั้งค่าครั้งแรก
 
+### 0. เพิ่มโดเมนใน Plesk
+
+ทำเป็น **subscription ใหม่ของตัวเอง** ไม่ใส่รวมกับ subscription ของโปรเจคอื่น เว็บนี้จะได้มี user ของระบบ, โฟลเดอร์ และ log แยกกัน
+
+- Subscriptions → **Add Subscription** → Domain name `lomprayahcargo.com`, ตั้ง username/password ใหม่ (ไม่ซ้ำกับของโปรเจคอื่น)
+- Plesk จะสร้างโฟลเดอร์ `/var/www/vhosts/lomprayahcargo.com/` และ `www` ให้อัตโนมัติ
+- ที่ผู้ให้บริการ DNS ของ lomprayahcargo.com ตั้ง A record ของ `lomprayahcargo.com` และ `www` ชี้ไปที่ IP ของเซิร์ฟเวอร์ Plesk อย่าแก้ record ของ `api` และ `app` ที่ใช้อยู่
+- ถ้า `api.lomprayahcargo.com` อยู่ใน Plesk เครื่องนี้แล้วเป็นโดเมนแยก Plesk อาจแจ้งว่ามีโดเมนย่อยอยู่แล้ว ไม่เป็นไร ให้เพิ่ม `lomprayahcargo.com` ต่อได้ ไม่กระทบ API
+
 ### 1. ตรวจว่ามี build แล้ว
 
 เปิดหน้า Actions ของ repo ดูว่า "Release build" ขึ้นเครื่องหมายถูก และหน้า Releases มีไฟล์ `lp-cargo-web.tar.gz`
