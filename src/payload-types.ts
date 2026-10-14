@@ -374,7 +374,7 @@ export interface Announcement {
   createdAt?: string | null;
 }
 /**
- * Shown as a 16:9 image slider as soon as visitors open the site. Use 1600×900 px images.
+ * Shown as a 16:9 image slider as soon as visitors open the site. Use 1600×900 px images, plus 1080×1920 px for phones.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "popup".
@@ -391,6 +391,10 @@ export interface Popup {
   slides?:
     | {
         image: number | Media;
+        /**
+         * 1080×1920 px. If empty, phones show the 16:9 image fitted inside the frame.
+         */
+        mobileImage?: (number | null) | Media;
         link?: string | null;
         id?: string | null;
       }[]
@@ -466,6 +470,7 @@ export interface PopupSelect<T extends boolean = true> {
     | T
     | {
         image?: T;
+        mobileImage?: T;
         link?: T;
         id?: T;
       };

@@ -7,10 +7,25 @@ import type { Locale } from '@/i18n/config'
 import type { Dictionary } from '@/i18n/dictionaries'
 
 export function parseTrackingNumbers(input: string): string[] {
-  return Array.from(new Set(input.toUpperCase().split(/[\s,]+/).filter(Boolean)))
+  return Array.from(
+    new Set(
+      input
+        .toUpperCase()
+        .split(/[\s,]+/)
+        .filter(Boolean),
+    ),
+  )
 }
 
-export function TrackingSearch({ locale, t, initial = '' }: { locale: Locale; t: Dictionary['track']; initial?: string }) {
+export function TrackingSearch({
+  locale,
+  t,
+  initial = '',
+}: {
+  locale: Locale
+  t: Dictionary['track']
+  initial?: string
+}) {
   const router = useRouter()
   const [value, setValue] = useState(initial)
   const [error, setError] = useState('')
@@ -46,7 +61,10 @@ export function TrackingSearch({ locale, t, initial = '' }: { locale: Locale; t:
           aria-describedby="tracking-hint"
           className="min-w-0 flex-[1_1_260px] rounded-xl border-[1.5px] border-line bg-bg px-4 py-3.5 font-mono text-lg tracking-wide uppercase placeholder:normal-case placeholder:tracking-normal placeholder:text-muted focus:border-navy focus:outline-none"
         />
-        <button type="submit" className="min-h-13 w-full rounded-xl bg-sun px-7 sm:w-auto font-display text-base font-semibold text-[#1b1300] hover:brightness-95">
+        <button
+          type="submit"
+          className="min-h-13 w-full rounded-xl bg-sun px-7 sm:w-auto font-display text-base font-semibold text-[#1b1300] hover:brightness-95"
+        >
           {t.submit}
         </button>
       </div>

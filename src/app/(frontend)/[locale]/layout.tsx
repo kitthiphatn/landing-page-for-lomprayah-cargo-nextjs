@@ -21,7 +21,11 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
   const t = getDictionary(locale)
@@ -33,7 +37,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   }
 }
 
-export default async function LocaleLayout({ children, params }: { children: ReactNode; params: Promise<{ locale: string }> }) {
+export default async function LocaleLayout({
+  children,
+  params,
+}: {
+  children: ReactNode
+  params: Promise<{ locale: string }>
+}) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
 
@@ -42,9 +52,22 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const siteName = content?.settings.siteName || 'Lomprayah Cargo'
   const popup = content?.popup
   const popupSlides: PopupSlide[] = (popup?.enabled ? (popup.slides ?? []) : []).flatMap((s) =>
-    s.image && typeof s.image === 'object' && s.image.url ? [{ src: s.image.url, alt: s.image.alt || '', link: s.link }] : [],
+    s.image && typeof s.image === 'object' && s.image.url
+      ? [
+          {
+            src: s.image.url,
+            mobileSrc:
+              s.mobileImage && typeof s.mobileImage === 'object' ? s.mobileImage.url : null,
+            alt: s.image.alt || '',
+            link: s.link,
+          },
+        ]
+      : [],
   )
-  const brand = content?.settings.primaryColor && content.settings.primaryColor !== 'navy' ? `brand-${content.settings.primaryColor}` : ''
+  const brand =
+    content?.settings.primaryColor && content.settings.primaryColor !== 'navy'
+      ? `brand-${content.settings.primaryColor}`
+      : ''
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -64,7 +87,11 @@ export default async function LocaleLayout({ children, params }: { children: Rea
               labels={t.popup}
             />
           )}
-          <CookieConsent t={t.cookie} message={content?.cookie.message} policyUrl={content?.cookie.policyUrl} />
+          <CookieConsent
+            t={t.cookie}
+            message={content?.cookie.message}
+            policyUrl={content?.cookie.policyUrl}
+          />
         </ThemeProvider>
       </body>
     </html>

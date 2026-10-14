@@ -64,7 +64,9 @@ body {
   font-family: var(--font-sans);
   line-height: 1.65;
 }
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: var(--font-display);
   text-wrap: balance;
 }
@@ -77,14 +79,24 @@ h1, h2, h3 {
   outline: none;
 }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation: none !important;
     transition: none !important;
   }
 }
 
 /* Primary color picked in the admin (Site settings) */
-.brand-sea { --navy: #0e6670; }
-.dark .brand-sea { --navy: #4fc3cc; }
-.brand-amber { --navy: #9a5b00; }
-.dark .brand-amber { --navy: #f5b93d; }
+.brand-sea {
+  --navy: #0e6670;
+}
+.dark .brand-sea {
+  --navy: #4fc3cc;
+}
+.brand-amber {
+  --navy: #9a5b00;
+}
+.dark .brand-amber {
+  --navy: #f5b93d;
+}

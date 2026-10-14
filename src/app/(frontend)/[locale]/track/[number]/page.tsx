@@ -8,7 +8,11 @@ import { getDictionary } from '@/i18n/dictionaries'
 // Results contain (masked) customer data, so keep them out of search engines
 export const metadata: Metadata = { robots: { index: false, follow: false } }
 
-export default async function TrackPage({ params }: { params: Promise<{ locale: string; number: string }> }) {
+export default async function TrackPage({
+  params,
+}: {
+  params: Promise<{ locale: string; number: string }>
+}) {
   const { locale, number } = await params
   if (!isLocale(locale)) notFound()
 

@@ -56,11 +56,19 @@ export function CookieConsent({ t, message, policyUrl }: Props) {
         </p>
         <div className="flex items-center gap-4">
           {!showSettings && (
-            <button type="button" onClick={() => setShowSettings(true)} className="text-muted underline underline-offset-2 hover:text-navy">
+            <button
+              type="button"
+              onClick={() => setShowSettings(true)}
+              className="text-muted underline underline-offset-2 hover:text-navy"
+            >
               {t.settings}
             </button>
           )}
-          <button type="button" onClick={() => save(true)} className="rounded-xl bg-sun px-5 py-2.5 font-semibold text-[#1b1300]">
+          <button
+            type="button"
+            onClick={() => save(true)}
+            className="rounded-xl bg-sun px-5 py-2.5 font-semibold text-[#1b1300]"
+          >
             {t.acceptAll}
           </button>
         </div>
@@ -81,7 +89,11 @@ export function CookieConsent({ t, message, policyUrl }: Props) {
               <span className="text-muted">{t.optionalDesc}</span>
             </span>
           </label>
-          <button type="button" onClick={() => save(optional)} className="rounded-xl border border-line px-4 py-2 font-medium hover:bg-chip">
+          <button
+            type="button"
+            onClick={() => save(optional)}
+            className="rounded-xl border border-line px-4 py-2 font-medium hover:bg-chip"
+          >
             {t.save}
           </button>
         </div>

@@ -48,8 +48,18 @@ export const Announcement: GlobalConfig = {
     {
       type: 'row',
       fields: [
-        { name: 'startsAt', label: { th: 'เริ่มแสดง', en: 'Starts' }, type: 'date', admin: { date: { pickerAppearance: 'dayAndTime' } } },
-        { name: 'endsAt', label: { th: 'สิ้นสุด', en: 'Ends' }, type: 'date', admin: { date: { pickerAppearance: 'dayAndTime' } } },
+        {
+          name: 'startsAt',
+          label: { th: 'เริ่มแสดง', en: 'Starts' },
+          type: 'date',
+          admin: { date: { pickerAppearance: 'dayAndTime' } },
+        },
+        {
+          name: 'endsAt',
+          label: { th: 'สิ้นสุด', en: 'Ends' },
+          type: 'date',
+          admin: { date: { pickerAppearance: 'dayAndTime' } },
+        },
       ],
     },
   ],

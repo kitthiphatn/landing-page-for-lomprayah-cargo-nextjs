@@ -9,7 +9,9 @@ export function proxy(request: NextRequest) {
   if (isLocale(first)) return NextResponse.next()
 
   const saved = request.cookies.get('NEXT_LOCALE')?.value
-  const browser = request.headers.get('accept-language')?.toLowerCase().startsWith('en') ? 'en' : null
+  const browser = request.headers.get('accept-language')?.toLowerCase().startsWith('en')
+    ? 'en'
+    : null
   const locale = saved && isLocale(saved) ? saved : (browser ?? defaultLocale)
 
   const url = request.nextUrl.clone()

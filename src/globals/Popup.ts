@@ -7,8 +7,8 @@ export const Popup: GlobalConfig = {
   label: { th: 'ป๊อปอัปประกาศ (สไลด์รูป)', en: 'Announcement popup (slides)' },
   admin: {
     description: {
-      th: 'แสดงเป็นหน้าต่างสไลด์รูป 16:9 ทันทีที่ลูกค้าเข้าเว็บ ใช้รูปขนาด 1600×900 พิกเซล',
-      en: 'Shown as a 16:9 image slider as soon as visitors open the site. Use 1600×900 px images.',
+      th: 'แสดงเป็นหน้าต่างสไลด์รูป 16:9 ทันทีที่ลูกค้าเข้าเว็บ ใช้รูป 1600×900 พิกเซล และรูปมือถือ 1080×1920 พิกเซล',
+      en: 'Shown as a 16:9 image slider as soon as visitors open the site. Use 1600×900 px images, plus 1080×1920 px for phones.',
     },
   },
   access: {
@@ -43,8 +43,18 @@ export const Popup: GlobalConfig = {
     {
       type: 'row',
       fields: [
-        { name: 'startsAt', label: { th: 'เริ่มแสดง', en: 'Starts' }, type: 'date', admin: { date: { pickerAppearance: 'dayAndTime' } } },
-        { name: 'endsAt', label: { th: 'สิ้นสุด', en: 'Ends' }, type: 'date', admin: { date: { pickerAppearance: 'dayAndTime' } } },
+        {
+          name: 'startsAt',
+          label: { th: 'เริ่มแสดง', en: 'Starts' },
+          type: 'date',
+          admin: { date: { pickerAppearance: 'dayAndTime' } },
+        },
+        {
+          name: 'endsAt',
+          label: { th: 'สิ้นสุด', en: 'Ends' },
+          type: 'date',
+          admin: { date: { pickerAppearance: 'dayAndTime' } },
+        },
       ],
     },
     {
@@ -65,6 +75,19 @@ export const Popup: GlobalConfig = {
           relationTo: 'media',
           required: true,
           localized: true,
+        },
+        {
+          name: 'mobileImage',
+          label: { th: 'รูปสำหรับมือถือ (9:16)', en: 'Mobile image (9:16)' },
+          type: 'upload',
+          relationTo: 'media',
+          localized: true,
+          admin: {
+            description: {
+              th: 'ขนาด 1080×1920 พิกเซล ถ้าไม่ใส่ มือถือจะแสดงรูป 16:9 แบบเต็มกรอบ',
+              en: '1080×1920 px. If empty, phones show the 16:9 image fitted inside the frame.',
+            },
+          },
         },
         {
           name: 'link',

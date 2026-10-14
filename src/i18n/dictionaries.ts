@@ -51,7 +51,8 @@ const en: Dictionary = {
   language: { label: 'Language', switchTo: 'ภาษาไทย' },
   hero: {
     title: 'Island parcel tracking. Know where your shipment is right now.',
-    subtitle: 'Ship between the mainland and Koh Samui, Koh Phangan and Koh Tao on Lomprayah ferries.',
+    subtitle:
+      'Ship between the mainland and Koh Samui, Koh Phangan and Koh Tao on Lomprayah ferries.',
   },
   track: {
     label: 'Tracking number',
@@ -72,7 +73,13 @@ const en: Dictionary = {
     optionalDesc: 'Count visits and measure ads. Cookies the site needs to work are always on.',
     reopen: 'Cookie settings',
   },
-  popup: { title: 'Announcement', close: 'Close', prev: 'Previous image', next: 'Next image', goTo: 'Go to image' },
+  popup: {
+    title: 'Announcement',
+    close: 'Close',
+    prev: 'Previous image',
+    next: 'Next image',
+    goTo: 'Go to image',
+  },
   footer: {
     rights: 'All rights reserved',
   },
