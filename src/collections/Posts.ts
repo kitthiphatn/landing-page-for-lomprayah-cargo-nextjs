@@ -2,7 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { contentHooks, publishedOrStaff, seoField, slugField } from './shared'
 
-export const POST_CATEGORIES = ['news', 'announcement', 'tips'] as const
+export const POST_CATEGORIES = ['news', 'announcement', 'promotion', 'travel', 'tips'] as const
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
@@ -54,6 +54,8 @@ export const Posts: CollectionConfig = {
       options: [
         { label: { th: 'ข่าวสาร', en: 'News' }, value: 'news' },
         { label: { th: 'ประกาศ', en: 'Announcement' }, value: 'announcement' },
+        { label: { th: 'โปรโมชั่น', en: 'Promotion' }, value: 'promotion' },
+        { label: { th: 'ข้อมูลการเดินทาง', en: 'Travel info' }, value: 'travel' },
         { label: { th: 'เกร็ดความรู้', en: 'Tips' }, value: 'tips' },
       ],
     },
@@ -75,6 +77,19 @@ export const Posts: CollectionConfig = {
       label: { th: 'เนื้อหา', en: 'Content' },
       type: 'richText',
       localized: true,
+    },
+    {
+      name: 'sourceUrl',
+      label: { th: 'ลิงก์บทความต้นฉบับ (ถ้ามี)', en: 'Original article link (optional)' },
+      type: 'text',
+      localized: true,
+      admin: {
+        position: 'sidebar',
+        description: {
+          th: 'แสดงปุ่ม "อ่านต่อ" ไปยังบทความเต็ม เช่น บน lomprayah.com',
+          en: 'Shows a "Read more" button to the full article, e.g. on lomprayah.com',
+        },
+      },
     },
     seoField,
   ],

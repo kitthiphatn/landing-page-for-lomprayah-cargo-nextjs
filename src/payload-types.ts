@@ -98,6 +98,7 @@ export interface Config {
   globals: {
     'site-settings': SiteSetting;
     'home-sections': HomeSection;
+    'about-page': AboutPage;
     announcement: Announcement;
     popup: Popup;
     'cookie-consent': CookieConsent;
@@ -105,6 +106,7 @@ export interface Config {
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'home-sections': HomeSectionsSelect<false> | HomeSectionsSelect<true>;
+    'about-page': AboutPageSelect<false> | AboutPageSelect<true>;
     announcement: AnnouncementSelect<false> | AnnouncementSelect<true>;
     popup: PopupSelect<false> | PopupSelect<true>;
     'cookie-consent': CookieConsentSelect<false> | CookieConsentSelect<true>;
@@ -152,7 +154,7 @@ export interface Post {
    * Set a future date to schedule; the post appears on its own at that time.
    */
   publishedAt: string;
-  category: 'news' | 'announcement' | 'tips';
+  category: 'news' | 'announcement' | 'promotion' | 'travel' | 'tips';
   cover?: (number | null) | Media;
   excerpt?: string | null;
   content?: {
@@ -170,6 +172,10 @@ export interface Post {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Shows a "Read more" button to the full article, e.g. on lomprayah.com
+   */
+  sourceUrl?: string | null;
   /**
    * Optional; the title and summary are used when empty.
    */
@@ -421,6 +427,7 @@ export interface PostsSelect<T extends boolean = true> {
   cover?: T;
   excerpt?: T;
   content?: T;
+  sourceUrl?: T;
   seo?:
     | T
     | {
@@ -584,7 +591,13 @@ export interface SiteSetting {
     lineId?: string | null;
     lineUrl?: string | null;
     email?: string | null;
+    whatsappUrl?: string | null;
     facebookUrl?: string | null;
+    instagramUrl?: string | null;
+    tiktokUrl?: string | null;
+    youtubeUrl?: string | null;
+    hours?: string | null;
+    address?: string | null;
   };
   hero?: {
     title?: string | null;
@@ -612,6 +625,48 @@ export interface HomeSection {
   showRoutes?: boolean | null;
   showNews?: boolean | null;
   showFaq?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-page".
+ */
+export interface AboutPage {
+  id: number;
+  title?: string | null;
+  intro?: string | null;
+  image?: (number | null) | Media;
+  stats?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Optional; the title and summary are used when empty.
+   */
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -687,7 +742,13 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         lineId?: T;
         lineUrl?: T;
         email?: T;
+        whatsappUrl?: T;
         facebookUrl?: T;
+        instagramUrl?: T;
+        tiktokUrl?: T;
+        youtubeUrl?: T;
+        hours?: T;
+        address?: T;
       };
   hero?:
     | T
@@ -717,6 +778,33 @@ export interface HomeSectionsSelect<T extends boolean = true> {
   showRoutes?: T;
   showNews?: T;
   showFaq?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-page_select".
+ */
+export interface AboutPageSelect<T extends boolean = true> {
+  title?: T;
+  intro?: T;
+  image?: T;
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  content?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

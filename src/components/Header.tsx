@@ -22,6 +22,7 @@ export function Header({
     { href: `/${locale}/branches`, label: t.nav.branches },
     { href: `/${locale}/news`, label: t.nav.news },
     { href: `/${locale}/faq`, label: t.nav.faq },
+    { href: `/${locale}/contact`, label: t.nav.contact },
   ]
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur">

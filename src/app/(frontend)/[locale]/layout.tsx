@@ -86,7 +86,7 @@ export default async function LocaleLayout({
           <AnnouncementBar data={content?.announcement} />
           <Header locale={locale} t={t} siteName={siteName} />
           <main>{children}</main>
-          <Footer t={t} settings={content?.settings} siteName={siteName} />
+          <Footer locale={locale} t={t} settings={content?.settings} siteName={siteName} />
           {popupSlides.length > 0 && (
             <PopupSlides
               slides={popupSlides}

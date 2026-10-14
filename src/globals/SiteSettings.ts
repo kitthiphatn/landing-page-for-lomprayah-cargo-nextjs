@@ -45,7 +45,23 @@ export const SiteSettings: GlobalConfig = {
         { name: 'lineId', label: 'LINE ID', type: 'text' },
         { name: 'lineUrl', label: { th: 'ลิงก์ LINE', en: 'LINE link' }, type: 'text' },
         { name: 'email', label: { th: 'อีเมล', en: 'Email' }, type: 'email' },
+        { name: 'whatsappUrl', label: 'WhatsApp', type: 'text' },
         { name: 'facebookUrl', label: 'Facebook', type: 'text' },
+        { name: 'instagramUrl', label: 'Instagram', type: 'text' },
+        { name: 'tiktokUrl', label: 'TikTok', type: 'text' },
+        { name: 'youtubeUrl', label: 'YouTube', type: 'text' },
+        {
+          name: 'hours',
+          label: { th: 'เวลาให้บริการ', en: 'Service hours' },
+          type: 'text',
+          localized: true,
+        },
+        {
+          name: 'address',
+          label: { th: 'ที่อยู่สำนักงาน', en: 'Office address' },
+          type: 'textarea',
+          localized: true,
+        },
       ],
     },
     {

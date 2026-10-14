@@ -25,6 +25,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     page('/branches', 0.8),
     page('/news', 0.6),
     page('/faq', 0.6),
+    page('/about', 0.5),
+    page('/contact', 0.5),
     ...routes.map((r) => page(`/routes/${r.slug}`, 0.7)),
     ...(posts?.docs ?? []).map((p) => page(`/news/${p.slug}`, 0.5)),
     ...branches.map((b) => page(`/branches/${encodeURIComponent(b.code)}`, 0.6)),

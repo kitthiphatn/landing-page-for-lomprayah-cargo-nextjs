@@ -78,6 +78,16 @@ export default async function PostPage({ params }: Props) {
         <img src={cover} alt="" className="aspect-video w-full rounded-2xl object-cover" />
       )}
       <RichText data={post.content} />
+      {post.sourceUrl && (
+        <a
+          href={post.sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-fit rounded-xl border border-line px-5 py-2.5 font-medium hover:bg-chip"
+        >
+          {t.readMore} →
+        </a>
+      )}
     </article>
   )
 }

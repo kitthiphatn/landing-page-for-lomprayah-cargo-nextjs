@@ -158,3 +158,13 @@ export async function listFaqs(locale: Locale) {
     return []
   }
 }
+
+export async function getAboutPage(locale: Locale) {
+  const payload = await db()
+  if (!payload) return null
+  try {
+    return await payload.findGlobal({ slug: 'about-page', locale, depth: 1 })
+  } catch {
+    return null
+  }
+}
