@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { BranchCard } from '@/components/branches/BranchCard'
 import { BranchMap } from '@/components/branches/BranchMap'
 import { TrackingSearch } from '@/components/TrackingSearch'
-import { isLocale, locales, type Locale } from '@/i18n/config'
+import { isLocale, type Locale } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
 import {
   branchTitle,
@@ -21,10 +21,10 @@ export const revalidate = 3600
 
 type Params = Promise<{ locale: string; code: string }>
 
-// Pre-render every branch when the API is reachable at build time; others render on first visit
-export async function generateStaticParams() {
-  const branches = (await fetchBranches()) ?? []
-  return locales.flatMap((locale) => branches.map((b) => ({ locale, code: b.code })))
+// Branch pages render on their first visit and are then cached, so a build never depends on the
+// tracking API being reachable
+export function generateStaticParams() {
+  return []
 }
 
 async function findBranch(code: string) {
