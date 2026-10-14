@@ -12,7 +12,7 @@
 ```bash
 cp .env.example .env   # แล้วตั้ง PAYLOAD_SECRET
 npm install
-npm run dev            # http://localhost:3000 และ http://localhost:3000/admin
+npm run dev            # http://localhost:3005 และ http://localhost:3005/admin
 ```
 
 ครั้งแรกที่เปิด `/admin` จะให้สร้างผู้ใช้คนแรก (ตั้ง role เป็น admin)

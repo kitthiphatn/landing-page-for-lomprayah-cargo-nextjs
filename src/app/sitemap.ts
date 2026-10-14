@@ -6,7 +6,7 @@ import { fetchBranches } from '@/lib/tracking/server'
 export const revalidate = 3600
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = (process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000').replace(/\/$/, '')
+  const base = (process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3005').replace(/\/$/, '')
   const branches = (await fetchBranches()) ?? []
   const page = (path: string, priority: number): MetadataRoute.Sitemap[number] => ({
     url: `${base}/th${path}`,
