@@ -72,6 +72,10 @@ h1, h2, h3 {
   outline: 2px solid var(--sun);
   outline-offset: 2px;
 }
+/* Containers focused by script (e.g. an opened dialog) don't need a ring */
+[tabindex='-1']:focus-visible {
+  outline: none;
+}
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation: none !important;
