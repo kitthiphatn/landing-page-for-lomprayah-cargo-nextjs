@@ -183,3 +183,17 @@ h3 {
 .lp-prose img {
   border-radius: 1rem;
 }
+
+/* HTML blocks from the editor: keep embeds and wide tables inside the column */
+.lp-html iframe,
+.lp-html img,
+.lp-html video {
+  max-width: 100%;
+}
+.lp-html iframe {
+  border: 0;
+}
+.lp-html table {
+  display: block;
+  overflow-x: auto;
+}
