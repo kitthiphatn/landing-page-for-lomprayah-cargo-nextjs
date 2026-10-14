@@ -78,7 +78,7 @@ npm run generate:types
 ทุกครั้งที่ merge เข้า `main` GitHub Actions จะ build เว็บแล้วเก็บไฟล์พร้อมรันไว้ใน Releases บนเซิร์ฟเวอร์รันคำสั่งเดียวเพื่อดาวน์โหลดและรีสตาร์ทเฉพาะเว็บนี้
 
 ```bash
-bash /var/www/vhosts/lomprayahcargo.com/cargo-web/deploy.sh /var/www/vhosts/lomprayahcargo.com/cargo-web
+bash /var/www/vhosts/lptable.com/lomprayahcargo.com/deploy.sh /var/www/vhosts/lptable.com/lomprayahcargo.com
 ```
 
 ขั้นตอนตั้งค่าครั้งแรก, ค่า environment ใน Plesk, การย้อนเวอร์ชัน และ backup อยู่ใน [docs/deploy-plesk.md](docs/deploy-plesk.md)

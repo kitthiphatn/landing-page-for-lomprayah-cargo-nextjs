@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Installs the latest release build into a Plesk site folder and restarts only this site.
 #
-#   bash deploy.sh /var/www/vhosts/lomprayahcargo.com/cargo-web          # latest build
-#   bash deploy.sh /var/www/vhosts/lomprayahcargo.com/cargo-web build-12 # a specific build (roll back)
+#   bash deploy.sh /var/www/vhosts/lptable.com/lomprayahcargo.com          # latest build
+#   bash deploy.sh /var/www/vhosts/lptable.com/lomprayahcargo.com build-12 # a specific build (roll back)
 #
 # Folder layout it keeps:
 #   app/       the running site (replaced on every deploy; Plesk "Application root")

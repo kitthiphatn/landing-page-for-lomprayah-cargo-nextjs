@@ -6,10 +6,10 @@
 
 ## โครงสร้างโฟลเดอร์บนเซิร์ฟเวอร์
 
-ตัวอย่างใช้ `/var/www/vhosts/lomprayahcargo.com/cargo-web` ถ้า www.lomprayahcargo.com อยู่ใน subscription อื่น ให้เปลี่ยนเป็นโฟลเดอร์ใน subscription นั้น
+เว็บนี้อยู่ใน webspace `lptable.com` (บัญชีเดียวกับ repair, checker, booking) ในโฟลเดอร์ของตัวเอง `/var/www/vhosts/lptable.com/lomprayahcargo.com` ที่ Plesk สร้างให้ตอนเพิ่มโดเมน
 
 ```
-cargo-web/
+lomprayahcargo.com/
   app/        ตัวเว็บที่รันอยู่ (ถูกแทนที่ทุกครั้งที่ deploy)
   data/       lp-cargo.db ฐานข้อมูล (ไม่ถูกแทนที่)
   media/      รูปที่อัปโหลดจากหลังบ้าน (ไม่ถูกแทนที่)
@@ -21,12 +21,16 @@ cargo-web/
 
 ### 0. เพิ่มโดเมนใน Plesk
 
-ทำเป็น **subscription ใหม่ของตัวเอง** ไม่ใส่รวมกับ subscription ของโปรเจคอื่น เว็บนี้จะได้มี user ของระบบ, โฟลเดอร์ และ log แยกกัน
+Websites & Domains → **Add Domain** → **Blank website**
 
-- Subscriptions → **Add Subscription** → Domain name `lomprayahcargo.com`, ตั้ง username/password ใหม่ (ไม่ซ้ำกับของโปรเจคอื่น)
-- Plesk จะสร้างโฟลเดอร์ `/var/www/vhosts/lomprayahcargo.com/` และ `www` ให้อัตโนมัติ
-- ที่ผู้ให้บริการ DNS ของ lomprayahcargo.com ตั้ง A record ของ `lomprayahcargo.com` และ `www` ชี้ไปที่ IP ของเซิร์ฟเวอร์ Plesk อย่าแก้ record ของ `api` และ `app` ที่ใช้อยู่
-- ถ้า `api.lomprayahcargo.com` อยู่ใน Plesk เครื่องนี้แล้วเป็นโดเมนแยก Plesk อาจแจ้งว่ามีโดเมนย่อยอยู่แล้ว ไม่เป็นไร ให้เพิ่ม `lomprayahcargo.com` ต่อได้ ไม่กระทบ API
+- Registered domain name: `lomprayahcargo.com`
+- Webspace: `lptable.com`
+- Hosting type: Website hosting
+- **ไม่ติ๊ก** Activate the DNS service (DNS ของโดเมนนี้ รวมถึง record ของ `api` จัดการที่อื่นอยู่แล้ว)
+- **ไม่ติ๊ก** Activate the mail service (ไม่งั้นอีเมลที่เซิร์ฟเวอร์ส่งไป @lomprayahcargo.com จะค้างอยู่ในเครื่องนี้)
+- กดเปิด **Hosting Settings** แล้วแก้ Document root เป็น `lomprayahcargo.com/app/public` (ต้องตั้งตั้งแต่ตอนนี้ ไม่งั้นไฟล์ฐานข้อมูลในโฟลเดอร์ `data/` จะถูกดาวน์โหลดผ่านเว็บได้)
+
+แล้วที่ผู้ให้บริการ DNS ของ lomprayahcargo.com ตั้ง A record ของ `lomprayahcargo.com` และ `www` ชี้ไปที่ IP ของเซิร์ฟเวอร์ (ดูได้ในหน้าโดเมน → Hosting & DNS) อย่าแก้ record ของ `api` และ `app`
 
 ### 1. ตรวจว่ามี build แล้ว
 
@@ -35,14 +39,12 @@ cargo-web/
 ### 2. สร้างโฟลเดอร์และติดตั้งครั้งแรก (SSH เป็น root)
 
 ```bash
-SITE=/var/www/vhosts/lomprayahcargo.com/cargo-web
-mkdir -p $SITE
-chown --reference=/var/www/vhosts/lomprayahcargo.com/httpdocs $SITE
+SITE=/var/www/vhosts/lptable.com/lomprayahcargo.com
 curl -fsSL -o $SITE/deploy.sh https://raw.githubusercontent.com/kitthiphatn/landing-page-for-lomprayah-cargo-nextjs/main/scripts/plesk/deploy.sh
 bash $SITE/deploy.sh $SITE
 ```
 
-สคริปต์จะเปลี่ยนเจ้าของไฟล์เป็น user ของ subscription ให้เอง เว็บจะได้เขียนฐานข้อมูลได้
+สคริปต์จะเปลี่ยนเจ้าของไฟล์เป็น user ของ webspace ให้เอง เว็บจะได้เขียนฐานข้อมูลได้
 
 ### 3. ใส่เนื้อหาตั้งต้น (ทำครั้งเดียว ถ้าอยากได้ข่าว/หน้าเกี่ยวกับเราจาก lomprayah.com)
 
@@ -54,8 +56,8 @@ npm run seed:production
 
 จะได้ไฟล์ `data\production.db` และโฟลเดอร์ `media-production\` (รูปข่าว) อัปโหลดขึ้นเซิร์ฟเวอร์ด้วย File Manager ของ Plesk หรือ WinSCP:
 
-- `data\production.db` → `cargo-web/data/lp-cargo.db`
-- ไฟล์ทั้งหมดใน `media-production\` → `cargo-web/media/`
+- `data\production.db` → `lomprayahcargo.com/data/lp-cargo.db`
+- ไฟล์ทั้งหมดใน `media-production\` → `lomprayahcargo.com/media/`
 
 แล้วรันบนเซิร์ฟเวอร์ `chown -R --reference=$SITE $SITE/data $SITE/media`
 
@@ -63,25 +65,25 @@ npm run seed:production
 
 ### 4. เปิด Node.js ใน Plesk
 
-Websites & Domains → www.lomprayahcargo.com → **Hosting Settings**: ตั้ง Document root เป็น `cargo-web/app/public`
+ตรวจว่า Document root ของโดเมนเป็น `lomprayahcargo.com/app/public` (ตั้งไว้ในขั้นที่ 0)
 
 แล้วเข้า **Node.js** ของโดเมนนี้ ตั้งค่า:
 
-| ช่อง                     | ค่า                         |
-| ------------------------ | --------------------------- |
-| Node.js Version          | 20.x                        |
-| Package Manager          | npm (ไม่ต้องกด NPM install) |
-| Document Root            | `/cargo-web/app/public`     |
-| Application Mode         | production                  |
-| Application Root         | `/cargo-web/app`            |
-| Application Startup File | `server.js`                 |
+| ช่อง                     | ค่า                              |
+| ------------------------ | -------------------------------- |
+| Node.js Version          | 20.x                             |
+| Package Manager          | npm (ไม่ต้องกด NPM install)      |
+| Document Root            | `/lomprayahcargo.com/app/public` |
+| Application Mode         | production                       |
+| Application Root         | `/lomprayahcargo.com/app`        |
+| Application Startup File | `server.js`                      |
 
 **Custom environment variables** (กดเพิ่มทีละตัว):
 
 | ชื่อ             | ค่า                                                                                                  |
 | ---------------- | ---------------------------------------------------------------------------------------------------- |
-| `DATABASE_URL`   | `file:/var/www/vhosts/lomprayahcargo.com/cargo-web/data/lp-cargo.db`                                 |
-| `MEDIA_DIR`      | `/var/www/vhosts/lomprayahcargo.com/cargo-web/media`                                                 |
+| `DATABASE_URL`   | `file:/var/www/vhosts/lptable.com/lomprayahcargo.com/data/lp-cargo.db`                               |
+| `MEDIA_DIR`      | `/var/www/vhosts/lptable.com/lomprayahcargo.com/media`                                               |
 | `PAYLOAD_SECRET` | สุ่มใหม่ด้วย `openssl rand -hex 32` แล้วเก็บไว้ อย่าเปลี่ยนภายหลัง (เปลี่ยนแล้วทุกคนต้องล็อกอินใหม่) |
 | `NODE_ENV`       | `production`                                                                                         |
 
@@ -105,7 +107,7 @@ Websites & Domains → www.lomprayahcargo.com → **Hosting Settings**: ตั�
 merge PR เข้า `main` → รอ Actions เขียว → SSH แล้วรัน
 
 ```bash
-bash /var/www/vhosts/lomprayahcargo.com/cargo-web/deploy.sh /var/www/vhosts/lomprayahcargo.com/cargo-web
+bash /var/www/vhosts/lptable.com/lomprayahcargo.com/deploy.sh /var/www/vhosts/lptable.com/lomprayahcargo.com
 ```
 
 ถ้ามี migration ฐานข้อมูลใหม่ ระบบจะ apply ให้เองตอนเว็บเริ่ม (ฐานข้อมูลถูก backup ไว้ใน `backups/` ก่อนแล้ว)
@@ -122,7 +124,7 @@ bash $SITE/deploy.sh $SITE build-12
 
 ## Backup
 
-ให้ Plesk Backup Manager รวมโฟลเดอร์ `cargo-web/data` และ `cargo-web/media` หรือคัดลอกสองโฟลเดอร์นี้ออกไปเก็บเป็นระยะ
+ให้ Plesk Backup Manager รวมโฟลเดอร์ `lomprayahcargo.com/data` และ `lomprayahcargo.com/media` หรือคัดลอกสองโฟลเดอร์นี้ออกไปเก็บเป็นระยะ
 
 ## ถ้าเว็บไม่ขึ้น
 
