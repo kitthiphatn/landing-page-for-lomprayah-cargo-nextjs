@@ -1,2 +1,50 @@
-# landing-page-for-lomprayah-cargo-nextjs
-landing-page-for-lomprayah-cargo-nextjs
+# Lomprayah Cargo: landing page
+
+เว็บหน้าแรกและหน้าติดตามพัสดุของ Lomprayah Cargo สร้างด้วย Next.js และ Payload CMS (หลังบ้านอยู่ที่ `/admin`)
+
+- ภาษา TH/EN: `/th/...` และ `/en/...` (เข้า `/` จะพาไปภาษาที่เคยเลือก หรือตามภาษาเบราว์เซอร์)
+- โหมดสว่าง/มืด: ครั้งแรกตามเครื่อง จากนั้นจำค่าที่เลือก
+- แบนเนอร์ขออนุญาตคุกกี้ (PDPA): ค่าที่เลือกเก็บในคุกกี้ `lp_consent` ใช้ `readConsent()` ใน `src/lib/consent.ts` ก่อนโหลดสคริปต์วิเคราะห์หรือโฆษณา
+- ฐานข้อมูล SQLite อยู่ในโฟลเดอร์ `data/` ของเว็บนี้เอง ไม่ใช้ฐานข้อมูลร่วมกับเว็บอื่นบนเซิร์ฟเวอร์
+
+## เริ่มพัฒนา
+
+```bash
+cp .env.example .env   # แล้วตั้ง PAYLOAD_SECRET
+npm install
+npm run dev            # http://localhost:3000 และ http://localhost:3000/admin
+```
+
+ครั้งแรกที่เปิด `/admin` จะให้สร้างผู้ใช้คนแรก (ตั้ง role เป็น admin)
+
+## แก้อะไรได้จากหลังบ้าน
+
+| เมนู | ใช้ทำอะไร |
+|---|---|
+| ตั้งค่าเว็บไซต์ | ชื่อเว็บ, โลโก้, สีหลัก, ช่องทางติดต่อ, ข้อความ hero, ข้อความท้ายเว็บ |
+| แถบประกาศด่วน | เปิด/ปิด, ระดับ (แจ้งข่าว/เตือน), ข้อความ, ช่วงเวลาแสดง |
+| แบนเนอร์คุกกี้ | ข้อความ และลิงก์นโยบายความเป็นส่วนตัว |
+| คลังรูป / ผู้ใช้ | อัปโหลดรูป, จัดการผู้ใช้ admin / editor |
+
+ทุกช่องข้อความกรอกได้ทั้ง TH และ EN (สลับภาษาที่มุมบนของหน้าแก้ไข) แก้แล้วหน้าเว็บอัปเดตทันที
+
+## เปลี่ยนโครงสร้างฐานข้อมูล
+
+เมื่อเพิ่มหรือแก้ field ใน collection/global ให้สร้าง migration แล้ว commit ไปด้วย
+
+```bash
+npm run payload migrate:create ชื่อการเปลี่ยนแปลง
+npm run generate:types
+```
+
+ตอนรันบน production ระบบจะ apply migration ที่ค้างอยู่ให้เองตอนเริ่ม
+
+## Deploy บน Plesk (ไม่กระทบเว็บอื่น)
+
+1. สร้างโดเมน/subdomain ของเว็บนี้แยก แล้วเปิด Node.js สำหรับโดเมนนี้ (Node 20 ขึ้นไป) ไม่ต้องเปลี่ยน Node ของทั้งเซิร์ฟเวอร์
+2. Build บนเครื่องตัวเองหรือ GitHub Actions (`npm ci && npm run build`) เพื่อไม่ให้กิน RAM ของเซิร์ฟเวอร์ แล้วอัปโหลดทั้งโฟลเดอร์ (รวม `.next`)
+3. ตั้ง Environment variables ใน Plesk ตาม `.env.example` (ใช้ `PAYLOAD_SECRET` ค่าใหม่ที่สุ่มเอง)
+4. Application startup: `npm start` (หรือชี้ startup file ไปที่ `node_modules/next/dist/bin/next` พร้อม argument `start`)
+5. Backup ไฟล์ `data/*.db` และโฟลเดอร์ `media/` เป็นระยะ
+
+รายละเอียดการตั้งค่า Plesk จะยืนยันอีกครั้งตอน deploy จริง
