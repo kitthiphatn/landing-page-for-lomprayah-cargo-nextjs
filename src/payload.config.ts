@@ -68,4 +68,17 @@ export default buildConfig({
   }),
   sharp,
   plugins: [],
+  // Sites set up before roles were enforced may have no admin; promote the first account
+  onInit: async (payload) => {
+    const admins = await payload.count({
+      collection: 'users',
+      where: { role: { equals: 'admin' } },
+    })
+    if (admins.totalDocs > 0) return
+    const { docs } = await payload.find({ collection: 'users', sort: 'createdAt', limit: 1 })
+    if (docs[0]) {
+      await payload.update({ collection: 'users', id: docs[0].id, data: { role: 'admin' } })
+      payload.logger.info(`Made ${docs[0].email} an admin (the site had none)`)
+    }
+  },
 })
