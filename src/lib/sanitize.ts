@@ -74,3 +74,80 @@ const options: sanitizeHtml.IOptions = {
 export function sanitize(html: string): string {
   return sanitizeHtml(html, options)
 }
+
+// Full-page HTML (its own <head>, <style>, Tailwind or icon fonts) is shown in an isolated
+// frame instead, so its styles can't leak into the site and the site's can't break it.
+const PAGE_SCRIPT_SOURCES = [
+  'https://cdn.tailwindcss.com',
+  'https://cdn.jsdelivr.net/npm/@tailwindcss/browser',
+]
+const PAGE_STYLESHEET_HOSTS = [
+  'fonts.googleapis.com',
+  'cdnjs.cloudflare.com',
+  'cdn.jsdelivr.net',
+  'unpkg.com',
+]
+
+const allowedScript = (src: string | undefined) =>
+  !!src &&
+  PAGE_SCRIPT_SOURCES.some(
+    (prefix) =>
+      src === prefix ||
+      src.startsWith(prefix + '/') ||
+      src.startsWith(prefix + '@') ||
+      src.startsWith(prefix + '?'),
+  )
+
+const allowedStylesheet = (href: string | undefined) => {
+  if (!href) return false
+  try {
+    const url = new URL(href)
+    return url.protocol === 'https:' && PAGE_STYLESHEET_HOSTS.includes(url.hostname)
+  } catch {
+    return false
+  }
+}
+
+const pageOptions: sanitizeHtml.IOptions = {
+  ...options,
+  allowedTags: [
+    ...(options.allowedTags as string[]),
+    'html',
+    'head',
+    'body',
+    'meta',
+    'title',
+    'style',
+    'link',
+    'script',
+    'i',
+  ],
+  allowedAttributes: {
+    ...(options.allowedAttributes as Record<string, string[]>),
+    '*': ['class', 'style', 'id', 'title', 'dir', 'lang', 'role', 'aria-*', 'data-*'],
+    html: ['lang', 'class'],
+    meta: ['charset', 'name', 'content'],
+    link: ['rel', 'href', 'crossorigin'],
+    script: ['src'],
+  },
+  // CSS may be anything here: the frame keeps it away from the rest of the site
+  allowedStyles: undefined,
+  allowVulnerableTags: true,
+  exclusiveFilter: (frame) => {
+    if (frame.tag === 'iframe') return !frame.attribs.src
+    // Only Tailwind from its official CDN; inline code and any other script is dropped
+    if (frame.tag === 'script') return !!frame.text.trim() || !allowedScript(frame.attribs.src)
+    if (frame.tag === 'link')
+      return frame.attribs.rel !== 'stylesheet' || !allowedStylesheet(frame.attribs.href)
+    return false
+  },
+}
+
+export function isFullPage(html: string): boolean {
+  return /<(html|head|body|style|link)\b|<script\b[^>]*\bsrc=/i.test(html)
+}
+
+// Cleans an HTML block the way it will be shown
+export function sanitizeBlock(html: string): string {
+  return isFullPage(html) ? sanitizeHtml(html, pageOptions) : sanitize(html)
+}
