@@ -5,7 +5,9 @@ import {
   type JSXConvertersFunction,
 } from '@payloadcms/richtext-lexical/react'
 
-import { sanitize } from '@/lib/sanitize'
+import { isFullPage, sanitize, sanitizeBlock } from '@/lib/sanitize'
+
+import { HtmlFrame } from './HtmlFrame'
 
 type HtmlBlockNode = SerializedBlockNode<{ blockType: 'html'; html: string }>
 
@@ -14,13 +16,12 @@ const converters: JSXConvertersFunction<DefaultNodeTypes | HtmlBlockNode> = ({
 }) => ({
   ...defaultConverters,
   blocks: {
-    // Sanitized again on display, so content saved before a filter change is still safe
-    html: ({ node }) => (
-      <div
-        className="lp-html"
-        dangerouslySetInnerHTML={{ __html: sanitize(node.fields.html ?? '') }}
-      />
-    ),
+    html: ({ node }) => {
+      const html = node.fields.html ?? ''
+      // Sanitized again on display, so content saved before a filter change is still safe
+      if (isFullPage(html)) return <HtmlFrame html={sanitizeBlock(html)} />
+      return <div className="lp-html" dangerouslySetInnerHTML={{ __html: sanitize(html) }} />
+    },
   },
 })
 
