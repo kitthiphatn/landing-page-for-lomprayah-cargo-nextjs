@@ -14,8 +14,17 @@ export function proxy(request: NextRequest) {
     : null
   const locale = saved && isLocale(saved) ? saved : (browser ?? defaultLocale)
 
+  // Behind Plesk the app itself is reached over plain http, so build the address from what the
+  // visitor used (forwarded headers), and never drop a site served over https back to http.
   const url = request.nextUrl.clone()
   url.pathname = `/${locale}${pathname === '/' ? '' : pathname}`
+  const proto = request.headers.get('x-forwarded-proto')?.split(',')[0].trim()
+  if (proto === 'https' || process.env.NEXT_PUBLIC_SERVER_URL?.startsWith('https:')) {
+    url.protocol = 'https:'
+    url.port = ''
+  }
+  const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host')
+  if (host) url.host = host
   return NextResponse.redirect(url)
 }
 
