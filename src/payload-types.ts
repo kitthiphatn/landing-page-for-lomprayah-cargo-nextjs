@@ -304,6 +304,9 @@ export interface Banner {
 export interface User {
   id: number;
   name?: string | null;
+  /**
+   * Admin: everything, including users · Editor: all content and site settings, but not other users
+   */
   role: 'admin' | 'editor';
   updatedAt: string;
   createdAt: string;
@@ -584,7 +587,18 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface SiteSetting {
   id: number;
   siteName?: string | null;
+  /**
+   * Shown in the header instead of the icon and site name. Use a transparent PNG or SVG, at least 80px tall.
+   */
   logo?: (number | null) | Media;
+  /**
+   * Optional. Use when the normal logo is too dark to see on a dark background.
+   */
+  logoDark?: (number | null) | Media;
+  /**
+   * A square PNG or SVG, 512×512px. Also used as the phone home-screen icon.
+   */
+  favicon?: (number | null) | Media;
   primaryColor?: ('navy' | 'sea' | 'amber') | null;
   contact?: {
     phone?: string | null;
@@ -734,6 +748,8 @@ export interface CookieConsent {
 export interface SiteSettingsSelect<T extends boolean = true> {
   siteName?: T;
   logo?: T;
+  logoDark?: T;
+  favicon?: T;
   primaryColor?: T;
   contact?:
     | T

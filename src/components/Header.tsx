@@ -11,10 +11,12 @@ export function Header({
   locale,
   t,
   siteName,
+  logo,
 }: {
   locale: Locale
   t: Dictionary
   siteName: string
+  logo?: { light: string; dark?: string | null } | null
 }) {
   const links = [
     { href: `/${locale}#track`, label: t.nav.track },
@@ -31,12 +33,39 @@ export function Header({
           href={`/${locale}`}
           className="flex items-center gap-2 font-display text-base font-bold whitespace-nowrap text-navy sm:text-lg"
         >
-          <svg width="28" height="20" viewBox="0 0 34 24" fill="currentColor" aria-hidden="true">
-            <path d="M4 14h26l-4 7H8z" />
-            <rect x="10" y="7" width="12" height="6" rx="1" />
-            <rect x="14" y="2" width="4" height="5" />
-          </svg>
-          {siteName}
+          {logo ? (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={logo.light}
+                alt={siteName}
+                className={`h-10 w-auto max-w-[180px] object-contain ${logo.dark ? 'dark:hidden' : ''}`}
+              />
+              {logo.dark && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={logo.dark}
+                  alt={siteName}
+                  className="hidden h-10 w-auto max-w-[180px] object-contain dark:block"
+                />
+              )}
+            </>
+          ) : (
+            <>
+              <svg
+                width="28"
+                height="20"
+                viewBox="0 0 34 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M4 14h26l-4 7H8z" />
+                <rect x="10" y="7" width="12" height="6" rx="1" />
+                <rect x="14" y="2" width="4" height="5" />
+              </svg>
+              {siteName}
+            </>
+          )}
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
           {links.map((l) => (
