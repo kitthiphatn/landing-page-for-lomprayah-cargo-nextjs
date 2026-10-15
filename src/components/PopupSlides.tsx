@@ -55,8 +55,8 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
   const [open, setOpen] = useState(false)
   const [index, setIndex] = useState(0)
   // Swipe with a finger or drag with the mouse; the slides follow the pointer while it moves
-  const drag = useRef<{ id: number; x: number; moved: boolean } | null>(null)
-  const [dragX, setDragX] = useState(0)
+  const drag = useRef<{ id: number; x: number; t: number; moved: boolean } | null>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
   const suppressClick = useRef(false)
   const wheelLock = useRef(0)
   const dialogRef = useRef<HTMLDivElement>(null)
@@ -74,6 +74,18 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
   }, [version, frequency])
 
   const go = useCallback((next: number) => setIndex(((next % count) + count) % count), [count])
+
+  // While dragging, move the track straight on the element (no React render per pointer move)
+  // and turn the animation off; letting go hands the position back to the eased transition
+  const setDrag = useCallback(
+    (dx: number | null) => {
+      const el = trackRef.current
+      if (!el) return
+      el.style.transition = dx === null ? '' : 'none'
+      el.style.transform = `translate3d(calc(${-index * 100}% + ${dx ?? 0}px), 0, 0)`
+    },
+    [index],
+  )
 
   useEffect(() => {
     if (!open) return
@@ -110,7 +122,7 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
         onPointerDown={(e) => {
           if (count < 2 || e.button !== 0) return
           if ((e.target as HTMLElement).closest('button')) return
-          drag.current = { id: e.pointerId, x: e.clientX, moved: false }
+          drag.current = { id: e.pointerId, x: e.clientX, t: e.timeStamp, moved: false }
         }}
         onPointerMove={(e) => {
           const d = drag.current
@@ -120,7 +132,7 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
             d.moved = true
             e.currentTarget.setPointerCapture(e.pointerId)
           }
-          if (d.moved) setDragX(dx)
+          if (d.moved) setDrag(dx)
         }}
         onPointerUp={(e) => {
           const d = drag.current
@@ -131,12 +143,17 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
           suppressClick.current = true
           const dx = e.clientX - d.x
           const width = e.currentTarget.getBoundingClientRect().width
-          if (Math.abs(dx) > Math.min(60, width * 0.15)) go(index + (dx < 0 ? 1 : -1))
-          setDragX(0)
+          // A quick flick counts even when it is short
+          const fast = Math.abs(dx) / Math.max(1, e.timeStamp - d.t) > 0.5
+          const el = trackRef.current
+          if (el) el.style.transition = ''
+          if (Math.abs(dx) > Math.min(60, width * 0.15) || (fast && Math.abs(dx) > 20))
+            go(index + (dx < 0 ? 1 : -1))
+          else setDrag(null)
         }}
         onPointerCancel={() => {
           drag.current = null
-          setDragX(0)
+          setDrag(null)
         }}
         // Links and images would otherwise start the browser's own drag and cancel ours
         onDragStart={(e) => e.preventDefault()}
@@ -158,8 +175,9 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
       >
         <div className="relative mx-auto aspect-[9/16] w-[min(100%,calc(76dvh*9/16))] max-w-full overflow-hidden rounded-2xl bg-surface shadow-2xl sm:aspect-video sm:w-full">
           <div
-            className={`flex h-full touch-pan-y select-none ${dragX ? '' : 'transition-transform duration-500 ease-out'} ${count > 1 ? 'cursor-grab active:cursor-grabbing' : ''}`}
-            style={{ transform: `translateX(calc(${-index * 100}% + ${dragX}px))` }}
+            ref={trackRef}
+            className={`flex h-full touch-pan-y select-none transition-transform duration-[450ms] ease-[cubic-bezier(.22,.8,.3,1)] will-change-transform ${count > 1 ? 'cursor-grab active:cursor-grabbing' : ''}`}
+            style={{ transform: `translate3d(${-index * 100}%, 0, 0)` }}
           >
             {slides.map((s, i) => {
               // Phones get the 9:16 image; without one, the 16:9 image is fitted inside the tall frame
@@ -171,7 +189,9 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
                     alt={s.alt}
                     className={`h-full w-full ${s.mobileSrc ? 'object-cover' : 'object-contain sm:object-cover'}`}
                     draggable={false}
-                    loading={i === 0 ? 'eager' : 'lazy'}
+                    // Every slide loads up front so the next one is ready before it slides in
+                    loading="eager"
+                    decoding="async"
                   />
                 </picture>
               )
