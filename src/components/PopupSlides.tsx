@@ -54,7 +54,11 @@ function markSeen(version: string, frequency: Props['frequency']) {
 export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labels }: Props) {
   const [open, setOpen] = useState(false)
   const [index, setIndex] = useState(0)
-  const touchX = useRef<number | null>(null)
+  // Swipe with a finger or drag with the mouse; the slides follow the pointer while it moves
+  const drag = useRef<{ id: number; x: number; moved: boolean } | null>(null)
+  const [dragX, setDragX] = useState(0)
+  const suppressClick = useRef(false)
+  const wheelLock = useRef(0)
   const dialogRef = useRef<HTMLDivElement>(null)
   const count = slides.length
 
@@ -103,18 +107,59 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
         aria-label={labels.title}
         className="relative w-full max-w-4xl outline-none"
         onClick={(e) => e.stopPropagation()}
-        onTouchStart={(e) => (touchX.current = e.touches[0]?.clientX ?? null)}
-        onTouchEnd={(e) => {
-          if (touchX.current === null) return
-          const dx = (e.changedTouches[0]?.clientX ?? touchX.current) - touchX.current
-          if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1))
-          touchX.current = null
+        onPointerDown={(e) => {
+          if (count < 2 || e.button !== 0) return
+          if ((e.target as HTMLElement).closest('button')) return
+          drag.current = { id: e.pointerId, x: e.clientX, moved: false }
+        }}
+        onPointerMove={(e) => {
+          const d = drag.current
+          if (!d || d.id !== e.pointerId) return
+          const dx = e.clientX - d.x
+          if (!d.moved && Math.abs(dx) > 6) {
+            d.moved = true
+            e.currentTarget.setPointerCapture(e.pointerId)
+          }
+          if (d.moved) setDragX(dx)
+        }}
+        onPointerUp={(e) => {
+          const d = drag.current
+          if (!d || d.id !== e.pointerId) return
+          drag.current = null
+          if (!d.moved) return
+          // A drag is not a click on the slide's link
+          suppressClick.current = true
+          const dx = e.clientX - d.x
+          const width = e.currentTarget.getBoundingClientRect().width
+          if (Math.abs(dx) > Math.min(60, width * 0.15)) go(index + (dx < 0 ? 1 : -1))
+          setDragX(0)
+        }}
+        onPointerCancel={() => {
+          drag.current = null
+          setDragX(0)
+        }}
+        // Links and images would otherwise start the browser's own drag and cancel ours
+        onDragStart={(e) => e.preventDefault()}
+        onClickCapture={(e) => {
+          if (!suppressClick.current) return
+          suppressClick.current = false
+          e.preventDefault()
+          e.stopPropagation()
+        }}
+        onWheel={(e) => {
+          // Two-finger sideways swipe on a laptop touchpad
+          if (count < 2 || Math.abs(e.deltaX) < 30 || Math.abs(e.deltaX) < Math.abs(e.deltaY))
+            return
+          const now = Date.now()
+          if (now < wheelLock.current) return
+          wheelLock.current = now + 700
+          go(index + (e.deltaX > 0 ? 1 : -1))
         }}
       >
         <div className="relative mx-auto aspect-[9/16] w-[min(100%,calc(76dvh*9/16))] max-w-full overflow-hidden rounded-2xl bg-surface shadow-2xl sm:aspect-video sm:w-full">
           <div
-            className="flex h-full transition-transform duration-500 ease-out"
-            style={{ transform: `translateX(-${index * 100}%)` }}
+            className={`flex h-full touch-pan-y select-none ${dragX ? '' : 'transition-transform duration-500 ease-out'} ${count > 1 ? 'cursor-grab active:cursor-grabbing' : ''}`}
+            style={{ transform: `translateX(calc(${-index * 100}% + ${dragX}px))` }}
           >
             {slides.map((s, i) => {
               // Phones get the 9:16 image; without one, the 16:9 image is fitted inside the tall frame
