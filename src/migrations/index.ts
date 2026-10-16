@@ -4,6 +4,7 @@ import * as migration_20261014_031554_popup_mobile_image from './20261014_031554
 import * as migration_20261014_055140_admin_content from './20261014_055140_admin_content';
 import * as migration_20261014_061243_about_contact_sources from './20261014_061243_about_contact_sources';
 import * as migration_20261014_161525_logo_favicon from './20261014_161525_logo_favicon';
+import * as migration_20261016_024340_popup_autoplay from './20261016_024340_popup_autoplay';
 
 export const migrations = [
   {
@@ -34,6 +35,11 @@ export const migrations = [
   {
     up: migration_20261014_161525_logo_favicon.up,
     down: migration_20261014_161525_logo_favicon.down,
-    name: '20261014_161525_logo_favicon'
+    name: '20261014_161525_logo_favicon',
+  },
+  {
+    up: migration_20261016_024340_popup_autoplay.up,
+    down: migration_20261016_024340_popup_autoplay.down,
+    name: '20261016_024340_popup_autoplay'
   },
 ];

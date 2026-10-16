@@ -716,6 +716,11 @@ export interface Popup {
   frequency?: ('day' | 'session') | null;
   startsAt?: string | null;
   endsAt?: string | null;
+  autoplay?: boolean | null;
+  /**
+   * Pauses while the visitor hovers over or drags the slides.
+   */
+  autoplaySeconds?: number | null;
   slides?:
     | {
         image: number | Media;
@@ -849,6 +854,8 @@ export interface PopupSelect<T extends boolean = true> {
   frequency?: T;
   startsAt?: T;
   endsAt?: T;
+  autoplay?: T;
+  autoplaySeconds?: T;
   slides?:
     | T
     | {

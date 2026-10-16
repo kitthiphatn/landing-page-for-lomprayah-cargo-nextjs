@@ -17,6 +17,8 @@ type Props = {
   frequency: 'day' | 'session'
   startsAt?: string | null
   endsAt?: string | null
+  /** Move to the next slide every this many seconds; null keeps the slides still */
+  autoplaySeconds?: number | null
   labels: {
     close: string
     prev: string
@@ -51,7 +53,15 @@ function markSeen(version: string, frequency: Props['frequency']) {
   }
 }
 
-export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labels }: Props) {
+export function PopupSlides({
+  slides,
+  version,
+  frequency,
+  startsAt,
+  endsAt,
+  autoplaySeconds,
+  labels,
+}: Props) {
   const [open, setOpen] = useState(false)
   const [index, setIndex] = useState(0)
   // Swipe with a finger or drag with the mouse; the slides follow the pointer while it moves
@@ -60,6 +70,7 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
   const suppressClick = useRef(false)
   const wheelLock = useRef(0)
   const dialogRef = useRef<HTMLDivElement>(null)
+  const [paused, setPaused] = useState(false)
   const count = slides.length
 
   useEffect(() => {
@@ -104,6 +115,13 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
     }
   }, [open, index, go, close])
 
+  // Auto-advance; the timer restarts whenever the slide changes, so a manual move gets a full interval
+  useEffect(() => {
+    if (!open || paused || count < 2 || !autoplaySeconds) return
+    const timer = window.setTimeout(() => go(index + 1), Math.max(2, autoplaySeconds) * 1000)
+    return () => window.clearTimeout(timer)
+  }, [open, paused, count, autoplaySeconds, index, go])
+
   if (!open || count === 0) return null
 
   return (
@@ -119,6 +137,8 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
         aria-label={labels.title}
         className="relative w-full max-w-4xl outline-none"
         onClick={(e) => e.stopPropagation()}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
         onPointerDown={(e) => {
           if (count < 2 || e.button !== 0) return
           if ((e.target as HTMLElement).closest('button')) return
@@ -130,6 +150,7 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
           const dx = e.clientX - d.x
           if (!d.moved && Math.abs(dx) > 6) {
             d.moved = true
+            setPaused(true)
             e.currentTarget.setPointerCapture(e.pointerId)
           }
           if (d.moved) setDrag(dx)
@@ -139,6 +160,8 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
           if (!d || d.id !== e.pointerId) return
           drag.current = null
           if (!d.moved) return
+          // A mouse stays paused until it leaves the popup; a finger lets go here
+          if (e.pointerType !== 'mouse') setPaused(false)
           // A drag is not a click on the slide's link
           suppressClick.current = true
           const dx = e.clientX - d.x
@@ -153,6 +176,7 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
         }}
         onPointerCancel={() => {
           drag.current = null
+          setPaused(false)
           setDrag(null)
         }}
         // Links and images would otherwise start the browser's own drag and cancel ours
