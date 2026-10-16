@@ -599,7 +599,47 @@ export interface SiteSetting {
    * A square PNG or SVG, 512×512px. Also used as the phone home-screen icon.
    */
   favicon?: (number | null) | Media;
-  primaryColor?: ('navy' | 'sea' | 'amber') | null;
+  /**
+   * During a festival theme set below, its colors are used instead.
+   */
+  primaryColor?: ('navy' | 'sea' | 'amber' | 'custom') | null;
+  customColors?: {
+    /**
+     * Header, buttons, links and the top of the homepage. Pick a dark color.
+     */
+    primary: string;
+    /**
+     * The other end of the homepage gradient, and parcel status.
+     */
+    secondary: string;
+    /**
+     * The Track button and other key buttons. Button text turns white or black to stay readable.
+     */
+    accent: string;
+  };
+  /**
+   * Switches the site colors for a date range, e.g. Songkran or New Year, then goes back to normal. If ranges overlap, the top one wins.
+   */
+  seasonalThemes?:
+    | {
+        name: string;
+        startsAt: string;
+        endsAt: string;
+        /**
+         * Header, buttons, links and the top of the homepage. Pick a dark color.
+         */
+        primary: string;
+        /**
+         * The other end of the homepage gradient, and parcel status.
+         */
+        secondary: string;
+        /**
+         * The Track button and other key buttons. Button text turns white or black to stay readable.
+         */
+        accent: string;
+        id?: string | null;
+      }[]
+    | null;
   contact?: {
     phone?: string | null;
     lineId?: string | null;
@@ -760,6 +800,24 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   logoDark?: T;
   favicon?: T;
   primaryColor?: T;
+  customColors?:
+    | T
+    | {
+        primary?: T;
+        secondary?: T;
+        accent?: T;
+      };
+  seasonalThemes?:
+    | T
+    | {
+        name?: T;
+        startsAt?: T;
+        endsAt?: T;
+        primary?: T;
+        secondary?: T;
+        accent?: T;
+        id?: T;
+      };
   contact?:
     | T
     | {

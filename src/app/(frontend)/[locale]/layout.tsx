@@ -14,6 +14,7 @@ import { isLocale, locales } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
 import { isPreview } from '@/lib/content'
 import { getSiteContent } from '@/lib/payload'
+import { activeThemeColors, themeCss } from '@/lib/theme'
 
 // Ship icon in the brand navy, used until a favicon is uploaded in Site settings
 const DEFAULT_ICON =
@@ -82,17 +83,19 @@ export default async function LocaleLayout({
         ]
       : [],
   )
+  const themeColors = activeThemeColors(content?.settings)
   const brand =
-    content?.settings.primaryColor && content.settings.primaryColor !== 'navy'
+    !themeColors && content?.settings.primaryColor && content.settings.primaryColor !== 'navy'
       ? `brand-${content.settings.primaryColor}`
       : ''
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={`min-h-dvh bg-bg text-fg antialiased ${brand}`}>
+        {themeColors && <style>{themeCss(themeColors)}</style>}
         <ThemeProvider>
           {preview && (
-            <div className="flex items-center justify-center gap-3 bg-sun px-4 py-1.5 text-sm font-medium text-[#1b1300]">
+            <div className="flex items-center justify-center gap-3 bg-sun px-4 py-1.5 text-sm font-medium text-on-sun">
               {t.preview.banner}
               <a href={`/preview/exit?path=/${locale}`} className="underline">
                 {t.preview.exit}

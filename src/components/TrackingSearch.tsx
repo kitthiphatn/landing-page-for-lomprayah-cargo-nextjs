@@ -58,7 +58,7 @@ export function TrackingSearch({
         />
         <button
           type="submit"
-          className="min-h-13 w-full rounded-xl bg-sun px-7 sm:w-auto font-display text-base font-semibold text-[#1b1300] hover:brightness-95"
+          className="min-h-13 w-full rounded-xl bg-sun px-7 sm:w-auto font-display text-base font-semibold text-on-sun hover:brightness-95"
         >
           {t.submit}
         </button>

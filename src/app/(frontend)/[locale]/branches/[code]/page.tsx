@@ -175,7 +175,7 @@ export default async function BranchPage({ params }: { params: Params }) {
                 href={directionsUrl(b)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-xl bg-sun px-5 py-2.5 font-semibold text-[#1b1300] hover:brightness-95"
+                className="rounded-xl bg-sun px-5 py-2.5 font-semibold text-on-sun hover:brightness-95"
               >
                 {t.directions}
               </a>
