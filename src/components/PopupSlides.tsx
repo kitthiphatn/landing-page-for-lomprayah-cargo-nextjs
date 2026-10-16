@@ -17,6 +17,10 @@ type Props = {
   frequency: 'day' | 'session'
   startsAt?: string | null
   endsAt?: string | null
+  /** Move to the next slide every this many seconds; null keeps the slides still */
+  autoplaySeconds?: number | null
+  /** Put the slides and their dots on a white card instead of straight on the dimmed page */
+  framed?: boolean
   labels: {
     close: string
     prev: string
@@ -51,7 +55,16 @@ function markSeen(version: string, frequency: Props['frequency']) {
   }
 }
 
-export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labels }: Props) {
+export function PopupSlides({
+  slides,
+  version,
+  frequency,
+  startsAt,
+  endsAt,
+  autoplaySeconds,
+  framed = false,
+  labels,
+}: Props) {
   const [open, setOpen] = useState(false)
   const [index, setIndex] = useState(0)
   // Swipe with a finger or drag with the mouse; the slides follow the pointer while it moves
@@ -60,6 +73,7 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
   const suppressClick = useRef(false)
   const wheelLock = useRef(0)
   const dialogRef = useRef<HTMLDivElement>(null)
+  const [paused, setPaused] = useState(false)
   const count = slides.length
 
   useEffect(() => {
@@ -104,6 +118,13 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
     }
   }, [open, index, go, close])
 
+  // Auto-advance; the timer restarts whenever the slide changes, so a manual move gets a full interval
+  useEffect(() => {
+    if (!open || paused || count < 2 || !autoplaySeconds) return
+    const timer = window.setTimeout(() => go(index + 1), Math.max(2, autoplaySeconds) * 1000)
+    return () => window.clearTimeout(timer)
+  }, [open, paused, count, autoplaySeconds, index, go])
+
   if (!open || count === 0) return null
 
   return (
@@ -119,6 +140,8 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
         aria-label={labels.title}
         className="relative w-full max-w-4xl outline-none"
         onClick={(e) => e.stopPropagation()}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
         onPointerDown={(e) => {
           if (count < 2 || e.button !== 0) return
           if ((e.target as HTMLElement).closest('button')) return
@@ -130,6 +153,7 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
           const dx = e.clientX - d.x
           if (!d.moved && Math.abs(dx) > 6) {
             d.moved = true
+            setPaused(true)
             e.currentTarget.setPointerCapture(e.pointerId)
           }
           if (d.moved) setDrag(dx)
@@ -139,6 +163,8 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
           if (!d || d.id !== e.pointerId) return
           drag.current = null
           if (!d.moved) return
+          // A mouse stays paused until it leaves the popup; a finger lets go here
+          if (e.pointerType !== 'mouse') setPaused(false)
           // A drag is not a click on the slide's link
           suppressClick.current = true
           const dx = e.clientX - d.x
@@ -153,6 +179,7 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
         }}
         onPointerCancel={() => {
           drag.current = null
+          setPaused(false)
           setDrag(null)
         }}
         // Links and images would otherwise start the browser's own drag and cancel ours
@@ -173,115 +200,129 @@ export function PopupSlides({ slides, version, frequency, startsAt, endsAt, labe
           go(index + (e.deltaX > 0 ? 1 : -1))
         }}
       >
-        <div className="relative mx-auto aspect-[9/16] w-[min(100%,calc(76dvh*9/16))] max-w-full overflow-hidden rounded-2xl bg-surface shadow-2xl sm:aspect-video sm:w-full">
+        <div
+          className={`mx-auto w-[min(100%,calc(76dvh*9/16))] max-w-full sm:w-full ${framed ? 'rounded-3xl bg-surface p-2.5 pb-3 shadow-2xl sm:p-3 sm:pb-4' : ''}`}
+        >
           <div
-            ref={trackRef}
-            className={`flex h-full touch-pan-y select-none transition-transform duration-[450ms] ease-[cubic-bezier(.22,.8,.3,1)] will-change-transform ${count > 1 ? 'cursor-grab active:cursor-grabbing' : ''}`}
-            style={{ transform: `translate3d(${-index * 100}%, 0, 0)` }}
+            className={`relative aspect-[9/16] w-full overflow-hidden bg-surface sm:aspect-video ${framed ? 'rounded-2xl' : 'rounded-2xl shadow-2xl'}`}
           >
-            {slides.map((s, i) => {
-              // Phones get the 9:16 image; without one, the 16:9 image is fitted inside the tall frame
-              const img = (
-                <picture>
-                  {s.mobileSrc && <source media="(max-width: 639px)" srcSet={s.mobileSrc} />}
-                  <img
-                    src={s.src}
-                    alt={s.alt}
-                    className={`h-full w-full ${s.mobileSrc ? 'object-cover' : 'object-contain sm:object-cover'}`}
-                    draggable={false}
-                    // Every slide loads up front so the next one is ready before it slides in
-                    loading="eager"
-                    decoding="async"
-                  />
-                </picture>
-              )
-              return (
-                <div
-                  key={i}
-                  className="h-full w-full shrink-0 [&_picture]:block [&_picture]:h-full [&_a]:block [&_a]:h-full"
-                  aria-hidden={i !== index}
-                >
-                  {s.link ? (
-                    <a
-                      href={s.link}
-                      onClick={() => markSeen(version, frequency)}
-                      tabIndex={i === index ? 0 : -1}
-                    >
-                      {img}
-                    </a>
-                  ) : (
-                    img
-                  )}
-                </div>
-              )
-            })}
+            <div
+              ref={trackRef}
+              className={`flex h-full touch-pan-y select-none transition-transform duration-[450ms] ease-[cubic-bezier(.22,.8,.3,1)] will-change-transform ${count > 1 ? 'cursor-grab active:cursor-grabbing' : ''}`}
+              style={{ transform: `translate3d(${-index * 100}%, 0, 0)` }}
+            >
+              {slides.map((s, i) => {
+                // Phones get the 9:16 image; without one, the 16:9 image is fitted inside the tall frame
+                const img = (
+                  <picture>
+                    {s.mobileSrc && <source media="(max-width: 639px)" srcSet={s.mobileSrc} />}
+                    <img
+                      src={s.src}
+                      alt={s.alt}
+                      className={`h-full w-full ${s.mobileSrc ? 'object-cover' : 'object-contain sm:object-cover'}`}
+                      draggable={false}
+                      // Every slide loads up front so the next one is ready before it slides in
+                      loading="eager"
+                      decoding="async"
+                    />
+                  </picture>
+                )
+                return (
+                  <div
+                    key={i}
+                    className="h-full w-full shrink-0 [&_picture]:block [&_picture]:h-full [&_a]:block [&_a]:h-full"
+                    aria-hidden={i !== index}
+                  >
+                    {s.link ? (
+                      <a
+                        href={s.link}
+                        onClick={() => markSeen(version, frequency)}
+                        tabIndex={i === index ? 0 : -1}
+                      >
+                        {img}
+                      </a>
+                    ) : (
+                      img
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+
+            <button
+              type="button"
+              onClick={close}
+              aria-label={labels.close}
+              className="absolute top-3 right-3 grid size-10 place-items-center rounded-full bg-black/55 text-white hover:bg-black/75"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                aria-hidden="true"
+              >
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+
+            {count > 1 && (
+              <>
+                <ArrowButton
+                  side="left"
+                  label={labels.prev}
+                  onClick={() => go(index - 1)}
+                  className="absolute top-1/2 left-3 hidden -translate-y-1/2 sm:grid"
+                />
+                <ArrowButton
+                  side="right"
+                  label={labels.next}
+                  onClick={() => go(index + 1)}
+                  className="absolute top-1/2 right-3 hidden -translate-y-1/2 sm:grid"
+                />
+              </>
+            )}
           </div>
 
-          <button
-            type="button"
-            onClick={close}
-            aria-label={labels.close}
-            className="absolute top-3 right-3 grid size-10 place-items-center rounded-full bg-black/55 text-white hover:bg-black/75"
-          >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              aria-hidden="true"
-            >
-              <path d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </button>
-
           {count > 1 && (
-            <>
+            <div className={`flex items-center justify-center gap-4 ${framed ? 'mt-3' : 'mt-4'}`}>
               <ArrowButton
                 side="left"
                 label={labels.prev}
                 onClick={() => go(index - 1)}
-                className="absolute top-1/2 left-3 hidden -translate-y-1/2 sm:grid"
+                className="grid sm:hidden"
               />
+              <div className="flex items-center gap-2">
+                {slides.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => go(i)}
+                    aria-label={`${labels.goTo} ${i + 1}`}
+                    aria-current={i === index}
+                    className={`h-2.5 rounded-full transition-all ${
+                      framed
+                        ? i === index
+                          ? 'w-8 bg-fg'
+                          : 'w-2.5 bg-fg/25 hover:bg-fg/50'
+                        : i === index
+                          ? 'w-8 bg-white'
+                          : 'w-2.5 bg-white/45 hover:bg-white/70'
+                    }`}
+                  />
+                ))}
+              </div>
               <ArrowButton
                 side="right"
                 label={labels.next}
                 onClick={() => go(index + 1)}
-                className="absolute top-1/2 right-3 hidden -translate-y-1/2 sm:grid"
+                className="grid sm:hidden"
               />
-            </>
+            </div>
           )}
         </div>
-
-        {count > 1 && (
-          <div className="mt-4 flex items-center justify-center gap-4">
-            <ArrowButton
-              side="left"
-              label={labels.prev}
-              onClick={() => go(index - 1)}
-              className="grid sm:hidden"
-            />
-            <div className="flex items-center gap-2">
-              {slides.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => go(i)}
-                  aria-label={`${labels.goTo} ${i + 1}`}
-                  aria-current={i === index}
-                  className={`h-2.5 rounded-full transition-all ${i === index ? 'w-8 bg-white' : 'w-2.5 bg-white/45 hover:bg-white/70'}`}
-                />
-              ))}
-            </div>
-            <ArrowButton
-              side="right"
-              label={labels.next}
-              onClick={() => go(index + 1)}
-              className="grid sm:hidden"
-            />
-          </div>
-        )}
       </div>
     </div>
   )

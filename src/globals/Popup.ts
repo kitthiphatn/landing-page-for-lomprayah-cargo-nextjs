@@ -58,6 +58,49 @@ export const Popup: GlobalConfig = {
       ],
     },
     {
+      name: 'framed',
+      label: {
+        th: 'มีกรอบขาวรอบรูปและจุดเลื่อนสไลด์',
+        en: 'White frame around the slides and dots',
+      },
+      type: 'checkbox',
+      defaultValue: true,
+      admin: {
+        description: {
+          th: 'ปิดไว้ รูปและจุดด้านล่างจะวางบนพื้นหลังโปร่งใส',
+          en: 'When off, the slides and dots sit on the see-through backdrop.',
+        },
+      },
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'autoplay',
+          label: { th: 'เลื่อนสไลด์อัตโนมัติ', en: 'Auto-advance slides' },
+          type: 'checkbox',
+          defaultValue: false,
+          admin: { width: '50%' },
+        },
+        {
+          name: 'autoplaySeconds',
+          label: { th: 'เปลี่ยนสไลด์ทุกกี่วินาที', en: 'Seconds per slide' },
+          type: 'number',
+          defaultValue: 5,
+          min: 2,
+          max: 60,
+          admin: {
+            width: '50%',
+            condition: (data) => Boolean(data?.autoplay),
+            description: {
+              th: 'หยุดเลื่อนชั่วคราวเมื่อลูกค้าชี้เมาส์หรือลากรูปอยู่',
+              en: 'Pauses while the visitor hovers over or drags the slides.',
+            },
+          },
+        },
+      ],
+    },
+    {
       name: 'slides',
       label: { th: 'สไลด์', en: 'Slides' },
       labels: {

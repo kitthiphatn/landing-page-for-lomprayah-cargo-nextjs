@@ -110,6 +110,8 @@ export default async function LocaleLayout({
               frequency={popup?.frequency === 'session' ? 'session' : 'day'}
               startsAt={popup?.startsAt}
               endsAt={popup?.endsAt}
+              autoplaySeconds={popup?.autoplay ? (popup.autoplaySeconds ?? 5) : null}
+              framed={popup?.framed ?? true}
               labels={t.popup}
             />
           )}
