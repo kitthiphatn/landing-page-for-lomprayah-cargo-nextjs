@@ -58,6 +58,21 @@ export const Popup: GlobalConfig = {
       ],
     },
     {
+      name: 'framed',
+      label: {
+        th: 'มีกรอบขาวรอบรูปและจุดเลื่อนสไลด์',
+        en: 'White frame around the slides and dots',
+      },
+      type: 'checkbox',
+      defaultValue: true,
+      admin: {
+        description: {
+          th: 'ปิดไว้ รูปและจุดด้านล่างจะวางบนพื้นหลังโปร่งใส',
+          en: 'When off, the slides and dots sit on the see-through backdrop.',
+        },
+      },
+    },
+    {
       type: 'row',
       fields: [
         {

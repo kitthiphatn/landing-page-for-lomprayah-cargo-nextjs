@@ -3773,6 +3773,14 @@
           "notNull": false,
           "autoincrement": false
         },
+        "framed": {
+          "name": "framed",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": true
+        },
         "autoplay": {
           "name": "autoplay",
           "type": "integer",
@@ -3919,6 +3927,6 @@
   "internal": {
     "indexes": {}
   },
-  "id": "54c4915d-faab-46a3-ac34-d5ff1bbb0221",
+  "id": "16251b52-0c2f-4db2-a710-7111301b5f49",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }

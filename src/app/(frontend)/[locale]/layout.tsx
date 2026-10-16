@@ -111,6 +111,7 @@ export default async function LocaleLayout({
               startsAt={popup?.startsAt}
               endsAt={popup?.endsAt}
               autoplaySeconds={popup?.autoplay ? (popup.autoplaySeconds ?? 5) : null}
+              framed={popup?.framed ?? true}
               labels={t.popup}
             />
           )}
