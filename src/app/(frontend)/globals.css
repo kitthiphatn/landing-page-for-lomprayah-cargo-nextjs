@@ -23,6 +23,10 @@
   --sun: #f2a516;
   --ok: #1d8a4e;
   --danger: #c23b3b;
+  --on-sun: #1b1300;
+  /* Homepage hero gradient; stays the same in dark mode */
+  --hero-from: #132968;
+  --hero-to: #0e7c86;
 }
 .dark {
   --bg: #0c1328;
@@ -51,6 +55,7 @@
   --color-sun: var(--sun);
   --color-ok: var(--ok);
   --color-danger: var(--danger);
+  --color-on-sun: var(--on-sun);
   --font-display: 'Anuphan', 'IBM Plex Sans Thai', system-ui, sans-serif;
   --font-sans: 'IBM Plex Sans Thai', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;

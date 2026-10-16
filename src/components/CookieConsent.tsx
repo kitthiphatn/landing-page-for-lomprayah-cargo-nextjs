@@ -69,7 +69,7 @@ export function CookieConsent({ t, message, policyUrl }: Props) {
           <button
             type="button"
             onClick={() => save(true)}
-            className="rounded-xl bg-sun px-5 py-2.5 font-semibold text-[#1b1300]"
+            className="rounded-xl bg-sun px-5 py-2.5 font-semibold text-on-sun"
           >
             {t.acceptAll}
           </button>

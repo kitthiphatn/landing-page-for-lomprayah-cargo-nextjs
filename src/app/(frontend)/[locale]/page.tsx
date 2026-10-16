@@ -33,7 +33,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <>
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#132968] via-[#0f4f7a] to-[#0e7c86] text-white">
+      <section className="relative overflow-hidden bg-gradient-to-b from-(--hero-from) via-[color-mix(in_oklab,var(--hero-from),var(--hero-to))] to-(--hero-to) text-white">
         {heroBg && (
           // eslint-disable-next-line @next/next/no-img-element -- CMS uploads are served as-is
           <img
@@ -160,7 +160,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               {contact.phone && (
                 <a
                   href={`tel:${contact.phone.replace(/[^\d+]/g, '')}`}
-                  className="rounded-xl bg-sun px-5 py-2.5 font-semibold text-[#1b1300] hover:brightness-95"
+                  className="rounded-xl bg-sun px-5 py-2.5 font-semibold text-on-sun hover:brightness-95"
                 >
                   {t.home.call} {contact.phone}
                 </a>

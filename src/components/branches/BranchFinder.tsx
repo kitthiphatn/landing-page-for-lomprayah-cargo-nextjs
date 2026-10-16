@@ -105,7 +105,7 @@ export function BranchFinder({ initial, locale, t }: Props) {
             type="button"
             onClick={locate}
             disabled={geo.state === 'locating'}
-            className="flex items-center justify-center gap-2 rounded-xl bg-sun px-5 py-3 font-semibold text-[#1b1300] hover:brightness-95 disabled:opacity-70 max-sm:w-full"
+            className="flex items-center justify-center gap-2 rounded-xl bg-sun px-5 py-3 font-semibold text-on-sun hover:brightness-95 disabled:opacity-70 max-sm:w-full"
           >
             <svg
               width="18"

@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
+import { themeColorFields } from '../fields/themeColors'
 import { revalidateSite } from '../lib/revalidate'
 
 export const SiteSettings: GlobalConfig = {
@@ -64,6 +65,65 @@ export const SiteSettings: GlobalConfig = {
         { label: { th: 'น้ำเงินลมพระยา', en: 'Lomprayah navy' }, value: 'navy' },
         { label: { th: 'ฟ้าทะเล', en: 'Sea teal' }, value: 'sea' },
         { label: { th: 'ส้มทอง', en: 'Sunset amber' }, value: 'amber' },
+        { label: { th: 'กำหนดสีเอง', en: 'Custom colors' }, value: 'custom' },
+      ],
+      admin: {
+        description: {
+          th: 'ถ้าตั้งธีมเทศกาลไว้ด้านล่าง ช่วงเวลานั้นจะใช้สีของเทศกาลแทน',
+          en: 'During a festival theme set below, its colors are used instead.',
+        },
+      },
+    },
+    {
+      name: 'customColors',
+      label: { th: 'สีที่กำหนดเอง', en: 'Custom colors' },
+      type: 'group',
+      admin: { condition: (data) => data?.primaryColor === 'custom' },
+      fields: themeColorFields,
+    },
+    {
+      name: 'seasonalThemes',
+      label: { th: 'ธีมสีช่วงเทศกาล', en: 'Festival color themes' },
+      labels: {
+        singular: { th: 'ธีมเทศกาล', en: 'Festival theme' },
+        plural: { th: 'ธีมเทศกาล', en: 'Festival themes' },
+      },
+      type: 'array',
+      admin: {
+        initCollapsed: true,
+        description: {
+          th: 'เปลี่ยนสีเว็บเองตามช่วงเวลา เช่น สงกรานต์ ลอยกระทง ปีใหม่ พ้นช่วงแล้วกลับเป็นสีปกติ ถ้าช่วงเวลาซ้อนกัน ใช้อันที่อยู่บนสุด',
+          en: 'Switches the site colors for a date range, e.g. Songkran or New Year, then goes back to normal. If ranges overlap, the top one wins.',
+        },
+        components: { RowLabel: '/components/admin/ThemeRowLabel#ThemeRowLabel' },
+      },
+      fields: [
+        {
+          name: 'name',
+          label: { th: 'ชื่อเทศกาล', en: 'Festival name' },
+          type: 'text',
+          required: true,
+        },
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'startsAt',
+              label: { th: 'เริ่ม', en: 'Starts' },
+              type: 'date',
+              required: true,
+              admin: { date: { pickerAppearance: 'dayAndTime' } },
+            },
+            {
+              name: 'endsAt',
+              label: { th: 'สิ้นสุด', en: 'Ends' },
+              type: 'date',
+              required: true,
+              admin: { date: { pickerAppearance: 'dayAndTime' } },
+            },
+          ],
+        },
+        ...themeColorFields,
       ],
     },
     {
