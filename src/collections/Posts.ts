@@ -47,7 +47,7 @@ export const Posts: CollectionConfig = {
           }
           try {
             const image = await findShareImage(post.sourceUrl)
-            if (!image) throw new Error('the page has no share image')
+            if (!image) throw new Error('หน้าต้นฉบับไม่มีรูปหน้าปก')
             const cover = await saveImage(payload, image, post.title)
             await payload.update({
               collection: 'posts',
@@ -57,7 +57,14 @@ export const Posts: CollectionConfig = {
             })
             filled++
           } catch (err) {
-            failed.push({ title: post.title, reason: (err as Error).message })
+            const e = err as Error
+            // Network failures and timeouts come back in English; say what they mean
+            const reason = /fetch failed|abort|timeout|ENOTFOUND|ECONN/i.test(
+              `${e.name} ${e.message}`,
+            )
+              ? 'เซิร์ฟเวอร์ต่อเว็บต้นฉบับไม่ได้'
+              : e.message
+            failed.push({ title: post.title, reason })
           }
         }
         return Response.json({ checked: docs.length, filled, noLink, failed })
