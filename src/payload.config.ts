@@ -21,6 +21,7 @@ import { HomeSections } from './globals/HomeSections'
 import { AboutPage } from './globals/AboutPage'
 import { defaultLocale } from './i18n/config'
 import { migrations } from './migrations'
+import { GalleryBlock } from './blocks/GalleryBlock'
 import { HtmlBlock } from './blocks/HtmlBlock'
 
 const filename = fileURLToPath(import.meta.url)
@@ -53,7 +54,10 @@ export default buildConfig({
   collections: [Posts, Routes, Faqs, Banners, Media, Users],
   globals: [SiteSettings, HomeSections, AboutPage, Announcement, Popup, CookieConsent],
   editor: lexicalEditor({
-    features: ({ defaultFeatures }) => [...defaultFeatures, BlocksFeature({ blocks: [HtmlBlock] })],
+    features: ({ defaultFeatures }) => [
+      ...defaultFeatures,
+      BlocksFeature({ blocks: [GalleryBlock, HtmlBlock] }),
+    ],
   }),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
