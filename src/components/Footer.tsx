@@ -90,7 +90,10 @@ export function Footer({
           )}
         </ul>
       </div>
-      <p className="border-t border-line px-4 py-4 text-center text-xs text-muted">
+      <p
+        className="border-t border-line px-4 py-4 text-center text-xs text-muted"
+        data-v="QnVpbHQgYnkgS2l0dGhpcGhhdCB3aXRoIENsYXVkZSAoQW50aHJvcGljKSDCtyAyMDI2"
+      >
         © {new Date().getFullYear()} {siteName}. {t.footer.rights} ·{' '}
         <CookieSettingsLink label={t.cookie.reopen} />
       </p>

@@ -6,7 +6,6 @@ import '../globals.css'
 
 import { AnnouncementBar } from '@/components/AnnouncementBar'
 import { CookieConsent } from '@/components/CookieConsent'
-import { DevCredit } from '@/components/DevCredit'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { PopupSlides, type PopupSlide } from '@/components/PopupSlides'
@@ -14,7 +13,6 @@ import { ThemeProvider } from '@/components/ThemeProvider'
 import { isLocale, locales } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
 import { isPreview } from '@/lib/content'
-import { CREDIT } from '@/lib/credit'
 import { getSiteContent } from '@/lib/payload'
 import { activeThemeColors, themeCss } from '@/lib/theme'
 
@@ -52,8 +50,6 @@ export async function generateMetadata({
     title: { default: 'Lomprayah Cargo', template: '%s · Lomprayah Cargo' },
     description: t.hero.subtitle,
     alternates: { languages: { th: '/th', en: '/en' } },
-    authors: [{ name: CREDIT.developer }],
-    creator: `${CREDIT.developer} with ${CREDIT.with}`,
   }
 }
 
@@ -97,7 +93,6 @@ export default async function LocaleLayout({
     <html lang={locale} suppressHydrationWarning>
       <body className={`min-h-dvh bg-bg text-fg antialiased ${brand}`}>
         {themeColors && <style>{themeCss(themeColors)}</style>}
-        <DevCredit />
         <ThemeProvider>
           {preview && (
             <div className="flex items-center justify-center gap-3 bg-sun px-4 py-1.5 text-sm font-medium text-on-sun">
