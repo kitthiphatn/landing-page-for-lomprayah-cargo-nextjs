@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { findShareImage, saveImage } from '../lib/coverFromSource'
+import { seedStarterContent } from '../lib/starterContent'
 import { contentHooks, publishedOrStaff, seoField, slugField } from './shared'
 
 export const POST_CATEGORIES = ['news', 'announcement', 'promotion', 'travel', 'tips'] as const
@@ -17,10 +18,41 @@ export const Posts: CollectionConfig = {
     preview: (doc, { locale }) =>
       doc?.slug ? `/preview?path=${encodeURIComponent(`/${locale}/news/${doc.slug}`)}` : null,
     components: {
-      beforeListTable: ['/components/admin/FillCoversButton#FillCoversButton'],
+      beforeListTable: [
+        '/components/admin/StarterContentButton#StarterContentButton',
+        '/components/admin/FillCoversButton#FillCoversButton',
+      ],
     },
   },
   endpoints: [
+    {
+      // Fills an empty server database with the starter content `npm run seed` adds locally,
+      // since nothing can be run on the shared server. Skips anything already there.
+      path: '/starter-content',
+      method: 'post',
+      handler: async (req) => {
+        if (!req.user) return Response.json({ error: 'Sign in first' }, { status: 401 })
+        const { payload } = req
+        const counts = async () => ({
+          posts: (await payload.count({ collection: 'posts' })).totalDocs,
+          faqs: (await payload.count({ collection: 'faqs' })).totalDocs,
+        })
+        const before = await counts()
+        const log: string[] = []
+        try {
+          await seedStarterContent(payload, (line) => log.push(line))
+        } catch (err) {
+          return Response.json({ error: (err as Error).message, log }, { status: 500 })
+        }
+        const after = await counts()
+        return Response.json({
+          posts: after.posts - before.posts,
+          faqs: after.faqs - before.faqs,
+          about: log.includes('About page: added'),
+          imagesSkipped: log.filter((l) => l.includes('skipped image')).length,
+        })
+      },
+    },
     {
       // Gives every post that has an original-article link but no cover the share image of that
       // page. Runs on the server, so it reaches sites this admin's browser can't fetch directly.
