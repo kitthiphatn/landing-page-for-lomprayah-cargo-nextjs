@@ -142,6 +142,9 @@ h3 {
 .leaflet-container {
   font-family: var(--font-sans);
   background: var(--chip);
+  /* Leaflet gives its panes and controls z-index 400–1000; keep those inside the map so the
+     popup, sticky header and cookie banner stay on top of it */
+  isolation: isolate;
 }
 
 /* Rich text from the CMS editor */
