@@ -92,7 +92,7 @@ export function TrackingResults({ numbers, locale, t }: Props) {
           className="order-first grid gap-2 lg:sticky lg:top-20 lg:order-none"
           aria-label={t.mapTitle}
         >
-          <div className="relative h-72 overflow-hidden rounded-2xl border border-line md:h-[420px] lg:h-[520px]">
+          <div className="relative isolate h-72 overflow-hidden rounded-2xl border border-line md:h-[420px] lg:h-[520px]">
             <RouteMap shipment={selected} branches={branches} locale={locale} />
             <div className="pointer-events-none absolute inset-x-3 bottom-3 z-[500] hidden md:block">
               <div className="pointer-events-auto">
