@@ -20,7 +20,10 @@ import { BranchMap, type BranchPin } from './BranchMap'
 
 type Props = { initial: Branch[] | null; locale: Locale; t: Dictionary['branches'] }
 type Filter = 'all' | BranchGroup
-type Geo = { state: 'idle' | 'locating' | 'failed' } | { state: 'ok'; lat: number; lng: number }
+type Geo =
+  | { state: 'idle' | 'locating' }
+  | { state: 'failed'; reason: 'denied' | 'unavailable' }
+  | { state: 'ok'; lat: number; lng: number }
 
 export function BranchFinder({ initial, locale, t }: Props) {
   const [branches, setBranches] = useState<Branch[] | null>(initial)
@@ -71,15 +74,29 @@ export function BranchFinder({ initial, locale, t }: Props) {
   }
 
   const locate = () => {
-    if (!navigator.geolocation) return setGeo({ state: 'failed' })
+    if (!navigator.geolocation) return setGeo({ state: 'failed', reason: 'unavailable' })
     setGeo({ state: 'locating' })
+    const found = (pos: GeolocationPosition) => {
+      setGeo({ state: 'ok', lat: pos.coords.latitude, lng: pos.coords.longitude })
+      setFilter('all')
+      setQuery('')
+    }
+    const failed = (err: GeolocationPositionError) =>
+      setGeo({
+        state: 'failed',
+        reason: err.code === err.PERMISSION_DENIED ? 'denied' : 'unavailable',
+      })
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setGeo({ state: 'ok', lat: pos.coords.latitude, lng: pos.coords.longitude })
-        setFilter('all')
-        setQuery('')
+      found,
+      (err) => {
+        if (err.code === err.PERMISSION_DENIED) return failed(err)
+        // A rough fix (Wi-Fi / cell) can come back empty; try once more with GPS
+        navigator.geolocation.getCurrentPosition(found, failed, {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 300000,
+        })
       },
-      () => setGeo({ state: 'failed' }),
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 },
     )
   }
@@ -141,7 +158,11 @@ export function BranchFinder({ initial, locale, t }: Props) {
             </span>
           )}
         </div>
-        {geo.state === 'failed' && <p className="text-sm text-danger">{t.locateFailed}</p>}
+        {geo.state === 'failed' && (
+          <p className="text-sm text-danger">
+            {geo.reason === 'denied' ? t.locateDenied : t.locateUnavailable}
+          </p>
+        )}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start">
