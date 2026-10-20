@@ -59,7 +59,9 @@ const th = {
     mainland: 'ฝั่ง',
     nearMe: 'สาขาใกล้ฉัน',
     locating: 'กำลังหาตำแหน่ง...',
-    locateFailed: 'หาตำแหน่งไม่ได้ ลองอนุญาตตำแหน่งในเบราว์เซอร์',
+    locateDenied:
+      'เครื่องไม่อนุญาตให้เว็บนี้ใช้ตำแหน่ง บน iPhone ไปที่ ตั้งค่า > ความเป็นส่วนตัวและความปลอดภัย > บริการหาตำแหน่ง > เว็บไซต์ Safari แล้วเลือก "ขณะใช้แอป" บน Android ให้อนุญาตตำแหน่งให้เบราว์เซอร์ แล้วกดอีกครั้ง',
+    locateUnavailable: 'หาตำแหน่งไม่ได้ ลองเปิด Wi-Fi หรือ GPS แล้วกดอีกครั้ง',
     count: 'สาขา',
     none: 'ไม่พบสาขาที่ค้นหา',
     loadFailed: 'โหลดรายชื่อสาขาไม่ได้ กรุณาลองใหม่อีกครั้ง',
@@ -223,7 +225,9 @@ const en: Dictionary = {
     mainland: 'Mainland',
     nearMe: 'Near me',
     locating: 'Finding your location...',
-    locateFailed: "Couldn't get your location. Allow location access in your browser.",
+    locateDenied:
+      'Your device is blocking location for this site. On iPhone go to Settings > Privacy & Security > Location Services > Safari Websites and choose "While Using the App"; on Android allow location for your browser. Then try again.',
+    locateUnavailable: "Couldn't find your location. Turn on Wi-Fi or GPS and try again.",
     count: 'branches',
     none: 'No branches match your search',
     loadFailed: "Couldn't load branches. Please try again.",
