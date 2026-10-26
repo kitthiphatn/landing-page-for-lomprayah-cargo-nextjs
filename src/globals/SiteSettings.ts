@@ -185,5 +185,21 @@ export const SiteSettings: GlobalConfig = {
       type: 'textarea',
       localized: true,
     },
+    {
+      name: 'analyticsId',
+      label: { th: 'รหัส Google Analytics', en: 'Google Analytics ID' },
+      type: 'text',
+      admin: {
+        placeholder: 'G-XXXXXXXXXX',
+        description: {
+          th: 'Measurement ID ของ GA4 ใช้นับผู้เข้าชม จะเริ่มนับเฉพาะคนที่กดยอมรับคุกกี้ เว้นว่างไว้ถ้าไม่ใช้',
+          en: 'GA4 Measurement ID for counting visitors. Only visitors who accept cookies are counted. Leave empty to turn off.',
+        },
+      },
+      validate: (value: string | null | undefined) =>
+        !value || /^G-[A-Z0-9]{4,}$/.test(value.trim())
+          ? true
+          : 'รหัสต้องขึ้นต้นด้วย G- เช่น G-AB12CD34EF',
+    },
   ],
 }

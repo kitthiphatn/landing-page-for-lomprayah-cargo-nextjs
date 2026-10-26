@@ -5,6 +5,7 @@ import type { ReactNode } from 'react'
 import '../globals.css'
 
 import { AnnouncementBar } from '@/components/AnnouncementBar'
+import { Analytics } from '@/components/Analytics'
 import { CookieConsent } from '@/components/CookieConsent'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
@@ -123,6 +124,9 @@ export default async function LocaleLayout({
             message={content?.cookie.message}
             policyUrl={content?.cookie.policyUrl}
           />
+          {!preview && content?.settings.analyticsId && (
+            <Analytics id={content.settings.analyticsId.trim()} />
+          )}
         </ThemeProvider>
       </body>
     </html>
