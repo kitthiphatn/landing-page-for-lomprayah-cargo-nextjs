@@ -659,6 +659,10 @@ export interface SiteSetting {
     background?: (number | null) | Media;
   };
   footerNote?: string | null;
+  /**
+   * GA4 Measurement ID for counting visitors. Only visitors who accept cookies are counted. Leave empty to turn off.
+   */
+  analyticsId?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -841,6 +845,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         background?: T;
       };
   footerNote?: T;
+  analyticsId?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
