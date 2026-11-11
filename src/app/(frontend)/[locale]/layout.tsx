@@ -44,12 +44,25 @@ export async function generateMetadata({
   if (!isLocale(locale)) return {}
   const t = getDictionary(locale)
   const content = await getSiteContent(locale)
-  const favicon = mediaUrl(content?.settings.favicon)
+  const favicon = content?.settings.favicon
+  // Served squared by /site-icon.png; the version busts browser and Google caches on a new upload
+  const icon =
+    favicon && typeof favicon === 'object'
+      ? `/site-icon.png?v=${encodeURIComponent(favicon.updatedAt)}`
+      : null
+  const description = content?.settings.hero?.subtitle || t.hero.subtitle
+  const logo = mediaUrl(content?.settings.logo)
   return {
-    icons: favicon ? { icon: favicon, apple: favicon } : { icon: DEFAULT_ICON },
+    icons: icon ? { icon, apple: icon } : { icon: DEFAULT_ICON },
     metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3005'),
     title: { default: 'Lomprayah Cargo', template: '%s · Lomprayah Cargo' },
-    description: t.hero.subtitle,
+    description,
+    openGraph: {
+      siteName: 'Lomprayah Cargo',
+      description,
+      locale: locale === 'th' ? 'th_TH' : 'en_US',
+      ...(logo && { images: [logo] }),
+    },
     alternates: { languages: { th: '/th', en: '/en' } },
   }
 }
