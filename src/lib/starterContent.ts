@@ -3,8 +3,9 @@
 // fields that already have a value are left alone.
 //
 // News posts are created as drafts, because most lomprayah.com news is about passenger ferries:
-// publish the ones that fit the cargo site from the admin panel. Cover images are downloaded from
-// lomprayah.com; if that fails the post is created without one.
+// publish the ones that fit the cargo site from the admin panel. Cargo news from the old
+// lomprayah2.com site that is still true goes up published. Cover images are downloaded from the
+// source site; if that fails the post is created without one.
 //
 // Runs from `npm run seed` locally, and from the import button above the admin's news list.
 import type { Payload } from 'payload'
@@ -12,19 +13,105 @@ import type { Payload } from 'payload'
 export type SeedLog = (line: string) => void
 
 type Category = 'news' | 'announcement' | 'promotion' | 'travel' | 'tips'
+type Body = ['h' | 'p', string][]
 type NewsItem = {
   slug: string
   category: Category
   date: string
   image?: string
-  th: { title: string; excerpt: string; url: string }
-  en: { title: string; excerpt: string; url: string }
+  /** Goes up published instead of as a draft */
+  publish?: boolean
+  th: { title: string; excerpt: string; url: string; body?: Body }
+  en: { title: string; excerpt: string; url: string; body?: Body }
 }
 
 const SITE = 'https://lomprayah.com'
 const UPLOADS = `${SITE}/assets/uploads/news`
 
+const OLD_SITE = 'https://lomprayah2.com'
+
 const NEWS: NewsItem[] = [
+  // Cargo news from the old lomprayah2.com site
+  {
+    slug: 'lomprayah-cargo-express-delivery',
+    category: 'news',
+    date: '2025-06-17',
+    image: `${OLD_SITE}/public/upload/userfiles/images/Cargo.jpg`,
+    publish: true,
+    th: {
+      title: 'Cargo ส่งด่วน ลมพระยาคาร์โก้ ฝากส่งได้ทุกสาขา',
+      excerpt:
+        'ส่งพัสดุด่วนไปกับรถและเรือลมพระยา ฝากได้ทุกสาขา ไม่ต้องรอนาน ครอบคลุมกรุงเทพฯ หัวหิน ชุมพร เกาะเต่า เกาะพะงัน เกาะสมุย สุราษฎร์ธานี ภูเก็ต และกระบี่',
+      url: `${OLD_SITE}/news/119`,
+      body: [
+        [
+          'p',
+          'ลมพระยาคาร์โก้เปิดบริการส่งพัสดุด่วนที่ทุกสาขา ฝากของที่เคาน์เตอร์ได้เลย ไม่ต้องรอนาน พัสดุจะเดินทางไปกับรถและเรือรอบถัดไปของลมพระยาจนถึงสาขาปลายทาง',
+        ],
+        ['h', 'เส้นทางที่ให้บริการ'],
+        [
+          'p',
+          'กรุงเทพฯ (ข้าวสาร) · กรุงเทพฯ (ปิ่นเกล้า) · หัวหิน · ชุมพร · เกาะเต่า · เกาะนางยวน · เกาะพะงัน · เกาะสมุย · สุราษฎร์ธานี · ภูเก็ต · กระบี่',
+        ],
+        [
+          'p',
+          'สอบถามค่าบริการและรอบส่งได้ที่สาขาใกล้คุณ ดูที่อยู่ เบอร์โทร และเวลาทำการของทุกสาขาได้ที่หน้าสาขา และติดตามสถานะพัสดุได้ด้วยเลขพัสดุที่หน้าแรก',
+        ],
+      ],
+    },
+    en: {
+      title: 'Lomprayah Cargo express delivery at every branch',
+      excerpt:
+        'Send parcels express on Lomprayah buses and ferries from any branch, with no long wait: Bangkok, Hua Hin, Chumphon, Koh Tao, Koh Phangan, Koh Samui, Surat Thani, Phuket and Krabi.',
+      url: `${OLD_SITE}/news/119`,
+      body: [
+        [
+          'p',
+          'Lomprayah Cargo express delivery is open at every branch. Hand your parcel in at the counter with no long wait, and it travels on the next Lomprayah bus and ferry to the destination branch.',
+        ],
+        ['h', 'Routes'],
+        [
+          'p',
+          'Bangkok (Khao San) · Bangkok (Pinklao) · Hua Hin · Chumphon · Koh Tao · Koh Nang Yuan · Koh Phangan · Koh Samui · Surat Thani · Phuket · Krabi',
+        ],
+        [
+          'p',
+          'Ask your nearest branch about rates and sailings. Every branch address, phone number and opening hours are on the Branches page, and you can follow a parcel with its tracking number on the homepage.',
+        ],
+      ],
+    },
+  },
+  {
+    // A 2016 notice; kept as a draft because the Khao San branch has since reopened
+    slug: 'cargo-bangkok-khaosan-moved-to-phutthamonthon-sai-2',
+    category: 'announcement',
+    date: '2016-12-10',
+    th: {
+      title: 'แจ้งย้ายจุดรับส่งพัสดุ สาขากรุงเทพฯ (ถนนข้าวสาร) ไปสาขาพุทธมณฑลสาย 2',
+      excerpt: 'ย้ายบริการรับส่งพัสดุ (คาร์โก้) ของสาขากรุงเทพฯ ถนนข้าวสาร ไปที่สาขาพุทธมณฑลสาย 2',
+      url: `${OLD_SITE}/news/9`,
+      body: [
+        [
+          'p',
+          'บริษัทฯ ขอแจ้งย้ายจุดรับส่งพัสดุ (คาร์โก้) ของสาขากรุงเทพฯ ถนนข้าวสาร ไปที่สาขาพุทธมณฑลสาย 2 เลขที่ 145 ถนนพุทธมณฑลสาย 2 แขวงศาลาธรรมสพน์ เขตทวีวัฒนา กรุงเทพฯ',
+        ],
+        ['p', 'สอบถามสาขาพุทธมณฑลสาย 2 โทร 0 2087 7055 หรือ 06 3079 4651'],
+      ],
+    },
+    en: {
+      title: 'Bangkok parcel service moves from Khao San Road to Phutthamonthon Sai 2',
+      excerpt:
+        'The Bangkok Khao San Road parcel (cargo) service has moved to the Phutthamonthon Sai 2 branch.',
+      url: `${OLD_SITE}/news/9`,
+      body: [
+        [
+          'p',
+          'Parcel (cargo) drop-off and pickup at the Bangkok Khao San Road branch has moved to the Phutthamonthon Sai 2 branch, 145 Phutthamonthon Sai 2 Road, Sala Thammasop, Thawi Watthana, Bangkok.',
+        ],
+        ['p', 'Phutthamonthon Sai 2 branch: 0 2087 7055 or 06 3079 4651'],
+      ],
+    },
+  },
   {
     slug: 'lomprayah-member-card',
     category: 'news',
@@ -375,12 +462,19 @@ async function seedNews(payload: Payload, log: SeedLog) {
     })
     if (existing.docs.length) continue
     const cover = n.image ? await upload(payload, log, n.image, n.th.title) : null
+    const draft = !n.publish
+    const content = (l: NewsItem['th']) =>
+      doc(
+        ...(l.body ?? [['p', l.excerpt]]).map(([k, t]) =>
+          block(k === 'h' ? 'heading' : 'paragraph', t),
+        ),
+      )
     const post = await payload.create({
       collection: 'posts',
       locale: 'th',
-      draft: true,
+      draft,
       data: {
-        _status: 'draft',
+        _status: draft ? 'draft' : 'published',
         slug: n.slug,
         category: n.category,
         publishedAt: new Date(`${n.date}T09:00:00+07:00`).toISOString(),
@@ -388,24 +482,24 @@ async function seedNews(payload: Payload, log: SeedLog) {
         title: n.th.title,
         excerpt: n.th.excerpt,
         sourceUrl: n.th.url,
-        content: doc(block('paragraph', n.th.excerpt)),
+        content: content(n.th),
       },
     })
     await payload.update({
       collection: 'posts',
       id: post.id,
       locale: 'en',
-      draft: true,
+      draft,
       data: {
         title: n.en.title,
         excerpt: n.en.excerpt,
         sourceUrl: n.en.url,
-        content: doc(block('paragraph', n.en.excerpt)),
+        content: content(n.en),
       },
     })
     created++
   }
-  log(`News: ${created} draft posts added (${NEWS.length - created} already there)`)
+  log(`News: ${created} posts added (${NEWS.length - created} already there)`)
 }
 
 async function seedContact(payload: Payload, log: SeedLog) {
