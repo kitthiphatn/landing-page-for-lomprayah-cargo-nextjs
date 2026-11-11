@@ -48,15 +48,15 @@ export function StarterContentButton() {
         {busy ? 'กำลังนำเข้า… (อาจใช้เวลาสักครู่)' : 'นำเข้าเนื้อหาตั้งต้น'}
       </Button>
       <p style={{ margin: '4px 0 0', color: 'var(--theme-elevation-500)', fontSize: 13 }}>
-        ใส่ข่าวจาก lomprayah.com (เป็นฉบับร่าง), หน้าเกี่ยวกับเรา, FAQ, บริการหน้าแรก
-        และลิงก์โซเชียล ส่วนที่มีอยู่แล้วจะไม่ถูกแก้
+        ใส่ข่าว cargo จากเว็บลมพระยาเดิม, ข่าวจาก lomprayah.com (เป็นฉบับร่าง), หน้าเกี่ยวกับเรา,
+        FAQ, บริการหน้าแรก และลิงก์โซเชียล ส่วนที่มีอยู่แล้วจะไม่ถูกแก้
       </p>
       {result && (
         <p style={{ marginTop: 8, fontSize: 13 }}>
           {result.error
             ? `นำเข้าไม่สำเร็จ: ${result.error}`
             : result.posts || result.faqs || result.about
-              ? `เพิ่มข่าว ${result.posts} รายการ (ฉบับร่าง รอกด Publish)` +
+              ? `เพิ่มข่าว ${result.posts} รายการ (ข่าวที่เป็นฉบับร่างรอกด Publish)` +
                 (result.faqs ? ` · FAQ ${result.faqs} ข้อ` : '') +
                 (result.about ? ' · หน้าเกี่ยวกับเรา' : '') +
                 (result.imagesSkipped ? ` · ดึงรูปไม่ได้ ${result.imagesSkipped} รูป` : '')
