@@ -2,6 +2,7 @@ import type { GlobalConfig } from 'payload'
 
 import { themeColorFields } from '../fields/themeColors'
 import { revalidateSite } from '../lib/revalidate'
+import { searchConsoleCode } from '../lib/searchConsole'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
@@ -200,6 +201,21 @@ export const SiteSettings: GlobalConfig = {
         !value || /^G-[A-Z0-9]{4,}$/.test(value.trim())
           ? true
           : 'รหัสต้องขึ้นต้นด้วย G- เช่น G-AB12CD34EF',
+    },
+    {
+      name: 'searchConsoleVerification',
+      label: { th: 'รหัสยืนยัน Google Search Console', en: 'Google Search Console verification' },
+      type: 'text',
+      admin: {
+        description: {
+          th: 'ใน Search Console เลือกยืนยันแบบ "HTML tag" แล้ววางแท็ก <meta ...> ทั้งบรรทัด หรือเฉพาะรหัสใน content ก็ได้',
+          en: 'In Search Console choose the "HTML tag" method and paste the whole <meta ...> tag, or just its content code.',
+        },
+      },
+      validate: (value: string | null | undefined) =>
+        !value || searchConsoleCode(value)
+          ? true
+          : 'วางแท็ก <meta name="google-site-verification" ...> หรือรหัสใน content',
     },
   ],
 }

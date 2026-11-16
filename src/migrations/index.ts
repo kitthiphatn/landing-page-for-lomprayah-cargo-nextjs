@@ -7,6 +7,7 @@ import * as migration_20261014_161525_logo_favicon from './20261014_161525_logo_
 import * as migration_20261016_025033_popup_autoplay_frame from './20261016_025033_popup_autoplay_frame';
 import * as migration_20261016_025802_custom_theme from './20261016_025802_custom_theme';
 import * as migration_20261026_155246_analytics_id from './20261026_155246_analytics_id';
+import * as migration_20261116_020250_search_console_verification from './20261116_020250_search_console_verification';
 
 export const migrations = [
   {
@@ -52,6 +53,11 @@ export const migrations = [
   {
     up: migration_20261026_155246_analytics_id.up,
     down: migration_20261026_155246_analytics_id.down,
-    name: '20261026_155246_analytics_id'
+    name: '20261026_155246_analytics_id',
+  },
+  {
+    up: migration_20261116_020250_search_console_verification.up,
+    down: migration_20261116_020250_search_console_verification.down,
+    name: '20261116_020250_search_console_verification'
   },
 ];
