@@ -31,7 +31,65 @@ const UPLOADS = `${SITE}/assets/uploads/news`
 
 const OLD_SITE = 'https://lomprayah2.com'
 
+// Images kept in this repository (assets/news), fetched from GitHub when the import runs
+const REPO_ASSETS =
+  'https://raw.githubusercontent.com/kitthiphatn/landing-page-for-lomprayah-cargo-nextjs/main/assets/news'
+
 const NEWS: NewsItem[] = [
+  // Company announcement poster (water sports equipment and bicycles), supplied by the user
+  {
+    slug: 'water-sports-equipment-and-bicycle-charges',
+    category: 'announcement',
+    date: '2026-11-16',
+    image: `${REPO_ASSETS}/water-sports-bicycle-announcement.webp`,
+    publish: true,
+    th: {
+      title: 'ประกาศ ค่าบริการอุปกรณ์กีฬาทางน้ำและจักรยาน',
+      excerpt:
+        'กระดานโต้คลื่นและกระดานไคท์เซิร์ฟ ขนาดไม่เกิน 1.5 เมตร คิดเพิ่ม 400 บาท (รถ+เรือ) หรือ 300 บาท (เรืออย่างเดียว) จักรยานคิดเพิ่ม 700 บาท หรือ 500 บาท',
+      body: [
+        ['h', 'อุปกรณ์กีฬาทางน้ำ'],
+        [
+          'p',
+          'อุปกรณ์กีฬาทางน้ำ เช่น กระดานโต้คลื่น กระดานไคท์เซิร์ฟ ขนาดไม่เกิน 1.5 เมตร คิดค่าใช้จ่ายเพิ่มเติม',
+        ],
+        ['p', '• เส้นทางรถ + เรือ 400 บาท'],
+        ['p', '• เส้นทางเรืออย่างเดียว 300 บาท'],
+        ['h', 'จักรยาน'],
+        ['p', 'จักรยานคิดค่าใช้จ่ายเพิ่มเติม'],
+        ['p', '• เส้นทางรถ + เรือ 700 บาท'],
+        ['p', '• เส้นทางเรืออย่างเดียว 500 บาท'],
+        ['p', 'เดินทางด้วยรถบัสหรือเรือสปีดโบ๊ท ต้องเป็นจักรยานพับได้เท่านั้น'],
+        [
+          'p',
+          'สอบถามเพิ่มเติม ศูนย์สำรองที่นั่งออนไลน์ 065 350 9040-2 ฝ่ายบริการลูกค้า 089 873 0008-9 อ่านเงื่อนไขการส่งพัสดุทั้งหมดได้ที่หน้า "เงื่อนไขการส่งพัสดุ"',
+        ],
+      ],
+    },
+    en: {
+      title: 'Announcement: water sports equipment and bicycle charges',
+      excerpt:
+        'Surfboards and kitesurf boards up to 1.5 m cost an extra 400 THB (bus + boat) or 300 THB (boat only). Bicycles cost an extra 700 THB or 500 THB.',
+      body: [
+        ['h', 'Water sports equipment'],
+        [
+          'p',
+          'Water sports equipment such as surfboards and kitesurf boards, not over 1.5 m, incurs an additional charge.',
+        ],
+        ['p', '• Bus + boat route: 400 THB'],
+        ['p', '• Boat-only route: 300 THB'],
+        ['h', 'Bicycles'],
+        ['p', 'Bicycles incur an additional charge.'],
+        ['p', '• Bus + boat route: 700 THB'],
+        ['p', '• Boat-only route: 500 THB'],
+        ['p', 'Only folding bicycles are accepted on the bus and speedboat.'],
+        [
+          'p',
+          'Online Reservation Center: 065 350 9040-2. Customer Service: 089 873 0008-9. See the Shipping terms page for all conditions.',
+        ],
+      ],
+    },
+  },
   // Written for this site: why send parcels from Bangkok to Koh Tao. Prices come from the
   // shipping terms (FM-BPC-03).
   {
@@ -586,7 +644,11 @@ async function upload(
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const data = Buffer.from(await res.arrayBuffer())
     const name = url.split('/').pop()?.split('?')[0] || 'image.webp'
-    const mimetype = res.headers.get('content-type') || 'image/webp'
+    // raw.githubusercontent.com sends images as text/plain or octet-stream, so trust the extension
+    const header = res.headers.get('content-type') || ''
+    const ext = name.split('.').pop()?.toLowerCase()
+    const byExt = ext === 'jpg' ? 'image/jpeg' : ext ? `image/${ext}` : 'image/webp'
+    const mimetype = header.startsWith('image/') ? header : byExt
     const media = await payload.create({
       collection: 'media',
       data: { alt },
