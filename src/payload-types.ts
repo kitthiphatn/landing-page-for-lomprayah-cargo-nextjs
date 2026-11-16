@@ -663,6 +663,10 @@ export interface SiteSetting {
    * GA4 Measurement ID for counting visitors. Only visitors who accept cookies are counted. Leave empty to turn off.
    */
   analyticsId?: string | null;
+  /**
+   * In Search Console choose the "HTML tag" method and paste the whole <meta ...> tag, or just its content code.
+   */
+  searchConsoleVerification?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -846,6 +850,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
       };
   footerNote?: T;
   analyticsId?: T;
+  searchConsoleVerification?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

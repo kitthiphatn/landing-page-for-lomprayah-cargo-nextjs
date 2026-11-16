@@ -15,6 +15,7 @@ import { isLocale, locales } from '@/i18n/config'
 import { getDictionary } from '@/i18n/dictionaries'
 import { isPreview } from '@/lib/content'
 import { getSiteContent } from '@/lib/payload'
+import { searchConsoleCode } from '@/lib/searchConsole'
 import { activeThemeColors, themeCss } from '@/lib/theme'
 
 // /favicon.ico serves the default ship icon until a favicon is uploaded in Site settings
@@ -46,9 +47,11 @@ export async function generateMetadata({
     favicon && typeof favicon === 'object'
       ? `/site-icon.png?v=${encodeURIComponent(favicon.updatedAt)}`
       : null
+  const verification = searchConsoleCode(content?.settings.searchConsoleVerification)
   const description = content?.settings.hero?.subtitle || t.hero.subtitle
   const logo = mediaUrl(content?.settings.logo)
   return {
+    verification: verification ? { google: verification } : undefined,
     icons: icon ? { icon, apple: icon } : { icon: DEFAULT_ICON },
     metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3005'),
     title: { default: 'Lomprayah Cargo', template: '%s · Lomprayah Cargo' },
