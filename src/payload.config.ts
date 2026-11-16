@@ -19,6 +19,7 @@ import { CookieConsent } from './globals/CookieConsent'
 import { Popup } from './globals/Popup'
 import { HomeSections } from './globals/HomeSections'
 import { AboutPage } from './globals/AboutPage'
+import { ShippingTerms } from './globals/ShippingTerms'
 import { defaultLocale } from './i18n/config'
 import { migrations } from './migrations'
 import { GalleryBlock } from './blocks/GalleryBlock'
@@ -52,7 +53,15 @@ export default buildConfig({
     fallback: true,
   },
   collections: [Posts, Routes, Faqs, Banners, Media, Users],
-  globals: [SiteSettings, HomeSections, AboutPage, Announcement, Popup, CookieConsent],
+  globals: [
+    SiteSettings,
+    HomeSections,
+    AboutPage,
+    ShippingTerms,
+    Announcement,
+    Popup,
+    CookieConsent,
+  ],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
       ...defaultFeatures,

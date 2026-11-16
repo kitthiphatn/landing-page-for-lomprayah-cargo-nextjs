@@ -140,6 +140,15 @@ export default async function RoutePage({ params }: Props) {
         </div>
       )}
 
+      <p className="max-w-3xl text-sm">
+        <Link
+          href={`/${locale}/terms`}
+          className="font-medium text-navy underline underline-offset-2"
+        >
+          {dict.terms.link}
+        </Link>
+      </p>
+
       {faqs.length > 0 && (
         <section className="grid max-w-3xl gap-3">
           <h2 className="font-display text-lg font-semibold">{t.faq}</h2>

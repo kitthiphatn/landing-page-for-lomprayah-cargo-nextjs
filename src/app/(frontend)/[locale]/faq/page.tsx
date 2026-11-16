@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { FaqList, faqJsonLd } from '@/components/content/FaqList'
@@ -33,6 +34,12 @@ export default async function FaqPage({ params }: Props) {
       <header className="grid gap-1">
         <h1 className="font-display text-2xl font-semibold sm:text-3xl">{t.title}</h1>
         <p className="text-muted">{t.subtitle}</p>
+        <Link
+          href={`/${locale}/terms`}
+          className="text-sm font-medium text-navy underline underline-offset-2"
+        >
+          {getDictionary(locale).terms.link}
+        </Link>
       </header>
       {faqs.length === 0 && <p className="text-muted">{t.none}</p>}
       {FAQ_CATEGORIES.map((c) => {
