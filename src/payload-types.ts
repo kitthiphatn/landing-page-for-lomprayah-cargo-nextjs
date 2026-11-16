@@ -99,6 +99,7 @@ export interface Config {
     'site-settings': SiteSetting;
     'home-sections': HomeSection;
     'about-page': AboutPage;
+    'shipping-terms': ShippingTerm;
     announcement: Announcement;
     popup: Popup;
     'cookie-consent': CookieConsent;
@@ -107,6 +108,7 @@ export interface Config {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'home-sections': HomeSectionsSelect<false> | HomeSectionsSelect<true>;
     'about-page': AboutPageSelect<false> | AboutPageSelect<true>;
+    'shipping-terms': ShippingTermsSelect<false> | ShippingTermsSelect<true>;
     announcement: AnnouncementSelect<false> | AnnouncementSelect<true>;
     popup: PopupSelect<false> | PopupSelect<true>;
     'cookie-consent': CookieConsentSelect<false> | CookieConsentSelect<true>;
@@ -733,6 +735,26 @@ export interface AboutPage {
   createdAt?: string | null;
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shipping-terms".
+ */
+export interface ShippingTerm {
+  id: number;
+  intro?: string | null;
+  /**
+   * In order. Start a new line with "- " for a sub-item.
+   */
+  items?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  formCode?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * Shown at the top of every page, e.g. ferry service suspended due to weather
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -898,6 +920,23 @@ export interface AboutPageSelect<T extends boolean = true> {
         description?: T;
         image?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shipping-terms_select".
+ */
+export interface ShippingTermsSelect<T extends boolean = true> {
+  intro?: T;
+  items?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  formCode?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

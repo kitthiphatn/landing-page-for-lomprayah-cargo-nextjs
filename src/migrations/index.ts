@@ -8,6 +8,7 @@ import * as migration_20261016_025033_popup_autoplay_frame from './20261016_0250
 import * as migration_20261016_025802_custom_theme from './20261016_025802_custom_theme';
 import * as migration_20261026_155246_analytics_id from './20261026_155246_analytics_id';
 import * as migration_20261116_020250_search_console_verification from './20261116_020250_search_console_verification';
+import * as migration_20261116_024004_shipping_terms from './20261116_024004_shipping_terms';
 
 export const migrations = [
   {
@@ -58,6 +59,11 @@ export const migrations = [
   {
     up: migration_20261116_020250_search_console_verification.up,
     down: migration_20261116_020250_search_console_verification.down,
-    name: '20261116_020250_search_console_verification'
+    name: '20261116_020250_search_console_verification',
+  },
+  {
+    up: migration_20261116_024004_shipping_terms.up,
+    down: migration_20261116_024004_shipping_terms.down,
+    name: '20261116_024004_shipping_terms'
   },
 ];

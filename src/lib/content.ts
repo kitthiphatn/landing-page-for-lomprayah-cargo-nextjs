@@ -159,6 +159,16 @@ export async function listFaqs(locale: Locale) {
   }
 }
 
+export async function getShippingTerms(locale: Locale) {
+  const payload = await db()
+  if (!payload) return null
+  try {
+    return await payload.findGlobal({ slug: 'shipping-terms', locale, depth: 0 })
+  } catch {
+    return null
+  }
+}
+
 export async function getAboutPage(locale: Locale) {
   const payload = await db()
   if (!payload) return null

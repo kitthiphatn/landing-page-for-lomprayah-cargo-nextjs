@@ -25,6 +25,7 @@ export function Footer({
     { href: `/${locale}/branches`, label: t.nav.branches },
     { href: `/${locale}/news`, label: t.nav.news },
     { href: `/${locale}/faq`, label: t.nav.faq },
+    { href: `/${locale}/terms`, label: t.nav.terms },
   ]
   const socials = [
     { label: 'Facebook', href: contact?.facebookUrl },

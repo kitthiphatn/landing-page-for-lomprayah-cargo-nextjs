@@ -10,6 +10,7 @@ const th = {
     faq: 'คำถามที่พบบ่อย',
     contact: 'ติดต่อเรา',
     about: 'เกี่ยวกับเรา',
+    terms: 'เงื่อนไขการส่ง',
     menu: 'เมนู',
     close: 'ปิดเมนู',
   },
@@ -146,6 +147,11 @@ const th = {
     },
   },
   about: { title: 'เกี่ยวกับเรา' },
+  terms: {
+    title: 'เงื่อนไขการส่งพัสดุ',
+    subtitle: 'ข้อตกลงการส่งสินค้า ค่าบริการเพิ่มเติม และสิ่งที่ไม่รับส่ง',
+    link: 'อ่านเงื่อนไขการส่งพัสดุ',
+  },
   contact: {
     title: 'ติดต่อเรา',
     subtitle: 'สอบถามเรื่องการส่งพัสดุ ค่าส่ง หรือติดตามพัสดุ',
@@ -186,6 +192,7 @@ const en: Dictionary = {
     faq: 'FAQ',
     contact: 'Contact',
     about: 'About us',
+    terms: 'Shipping terms',
     menu: 'Menu',
     close: 'Close menu',
   },
@@ -323,6 +330,11 @@ const en: Dictionary = {
     },
   },
   about: { title: 'About us' },
+  terms: {
+    title: 'Shipping terms',
+    subtitle: 'Our shipping agreement, extra charges and items we cannot carry',
+    link: 'Read our shipping terms',
+  },
   contact: {
     title: 'Contact us',
     subtitle: 'Questions about sending, rates or tracking a parcel',
