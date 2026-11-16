@@ -1,25 +1,11 @@
-import path from 'node:path'
+import { siteIconSource, squarePng } from '@/lib/siteIcon'
 
-import { getPayload } from 'payload'
-import sharp from 'sharp'
-
-import config from '@payload-config'
-
-// The favicon from Site settings, padded to a 512×512 square. Browsers and Google only accept
-// square icons, and logos are rarely uploaded square.
+// The favicon from Site settings, padded to a 512×512 square
 export async function GET() {
+  const source = await siteIconSource()
+  if (!source) return new Response(null, { status: 404 })
   try {
-    const payload = await getPayload({ config })
-    const settings = await payload.findGlobal({ slug: 'site-settings', depth: 1 })
-    const icon = settings.favicon
-    if (!icon || typeof icon !== 'object' || !icon.filename) {
-      return new Response(null, { status: 404 })
-    }
-    const file = path.resolve(process.env.MEDIA_DIR || 'media', icon.filename)
-    const png = await sharp(file)
-      .resize(512, 512, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
-      .png()
-      .toBuffer()
+    const png = await squarePng(source, 512)
     return new Response(new Uint8Array(png), {
       headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=86400' },
     })
