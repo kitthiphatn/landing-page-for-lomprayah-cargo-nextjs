@@ -21,8 +21,9 @@ type NewsItem = {
   image?: string
   /** Goes up published instead of as a draft */
   publish?: boolean
-  th: { title: string; excerpt: string; url: string; body?: Body }
-  en: { title: string; excerpt: string; url: string; body?: Body }
+  /** url: the original article this was taken from, shown as a source link */
+  th: { title: string; excerpt: string; url?: string; body?: Body }
+  en: { title: string; excerpt: string; url?: string; body?: Body }
 }
 
 const SITE = 'https://lomprayah.com'
@@ -31,6 +32,155 @@ const UPLOADS = `${SITE}/assets/uploads/news`
 const OLD_SITE = 'https://lomprayah2.com'
 
 const NEWS: NewsItem[] = [
+  // Written for this site: why send parcels from Bangkok to Koh Tao. Prices come from the
+  // shipping terms (FM-BPC-03).
+  {
+    slug: 'why-send-parcels-bangkok-to-koh-tao',
+    category: 'tips',
+    date: '2026-11-16',
+    image: `${UPLOADS}/d84eda2ed3e91d0b28510f96704d959c.webp`,
+    publish: true,
+    th: {
+      title: '10 เหตุผลที่ควรส่งพัสดุจากกรุงเทพฯ ไปเกาะเต่า',
+      excerpt:
+        'จะไปดำน้ำ พักยาว หรือเปิดร้านบนเกาะเต่า ส่งของล่วงหน้าไปกับลมพระยา คาร์โก้ แล้วเดินทางตัวเบาดีกว่า',
+      body: [
+        [
+          'p',
+          'เกาะเต่าเป็นเกาะเล็กกลางอ่าวไทยที่คนมาเที่ยวทั้งดำน้ำ ดูวิว และพักยาว แต่การหอบของหนักขึ้นรถแล้วต่อเรือไม่ใช่เรื่องสนุก ส่งพัสดุล่วงหน้าไปกับลมพระยา คาร์โก้ แล้วเดินทางตัวเบาดีกว่า นี่คือ 10 เหตุผลที่ควรส่ง',
+        ],
+        ['h', '1. อุปกรณ์ดำน้ำหนัก ส่งล่วงหน้าไปรอได้'],
+        [
+          'p',
+          'เกาะเต่าขึ้นชื่อเรื่องดำน้ำและสน็อกเกิล ทั้งเกาะนางยวนและอ่าวรอบเกาะ ชุดดำน้ำ ฟิน หน้ากาก และกล้องกันน้ำรวมกันแล้วหนักไม่น้อย ส่งล่วงหน้าแล้วไปรับที่สาขาปลายทาง รับน้ำหนักได้ถึง 30 กิโลกรัมต่อชิ้น',
+        ],
+        ['h', '2. เดินทางตัวเบา ไม่ต้องจ่ายค่ากระเป๋าเกิน'],
+        [
+          'p',
+          'ผู้โดยสารนำกระเป๋าใบใหญ่ขึ้นรถและเรือได้ 1 ใบ น้ำหนักไม่เกิน 20 กิโลกรัม เกินจากนั้นคิดเพิ่ม 200 บาทต่อใบ ถ้าของเยอะ แยกส่งเป็นพัสดุช่วยให้เดินทางสบายกว่า',
+        ],
+        ['h', '3. ส่งกระดานโต้คลื่นและไคท์เซิร์ฟได้'],
+        [
+          'p',
+          'บอร์ดยาวเกิน 1 เมตรแต่ไม่เกิน 1.50 เมตร ส่งได้ในราคา 400 บาท (เส้นทางรถ+เรือ) หรือ 300 บาท (เส้นทางเรืออย่างเดียว)',
+        ],
+        ['h', '4. พาจักรยานพับไปปั่นรอบเกาะ'],
+        [
+          'p',
+          'เกาะเต่ามีถนนเล็กๆ และจุดชมวิวหลายแห่ง จักรยานพับส่งได้ 700 บาท (รถ+เรือ) หรือ 500 บาท (เรืออย่างเดียว) รับเฉพาะจักรยานแบบพับเก็บได้',
+        ],
+        ['h', '5. ย้ายมาพักยาวที่หาดทรายรีหรือทำงานบนเกาะ'],
+        [
+          'p',
+          'คนที่มาเรียนดำน้ำหลายสัปดาห์ หรือย้ายมาทำงานบนเกาะ ทยอยส่งของใช้ส่วนตัวมาเป็นกล่องๆ ได้ ไม่ต้องขนรอบเดียว',
+        ],
+        ['h', '6. เจ้าของร้านและรีสอร์ตสั่งของจากกรุงเทพฯ ได้'],
+        [
+          'p',
+          'ของบางอย่างหาบนเกาะยากหรือแพงกว่า ร้านค้า คาเฟ่ และรีสอร์ตส่งวัตถุดิบแห้ง อุปกรณ์ และอะไหล่จากกรุงเทพฯ ได้ (ไม่รับวัตถุไวไฟ และของสดแช่เย็นบริษัทไม่รับผิดชอบความเสียหาย)',
+        ],
+        ['h', '7. ส่งของฝากหรือของขวัญให้คนบนเกาะ'],
+        [
+          'p',
+          'มีเพื่อนหรือครอบครัวอยู่เกาะเต่า ส่งของฝากจากกรุงเทพฯ ไปถึงมือได้ ผู้รับมีเวลารับของที่สาขาภายใน 7 วัน',
+        ],
+        ['h', '8. ติดตามพัสดุออนไลน์ได้ตลอดทาง'],
+        [
+          'p',
+          'ใส่เลขพัสดุที่ www.lomprayahcargo.com หรือกดสแกนบาร์โค้ดบนใบพัสดุด้วยกล้องมือถือ ดูได้ว่าของถึงไหน ขึ้นเรือแล้วหรือยัง',
+        ],
+        ['h', '9. ส่งได้ตั้งแต่ต้นทางจนถึงเกาะในเครือข่ายเดียว'],
+        [
+          'p',
+          'ลมพระยามีทั้งรถและเรือเชื่อมจากกรุงเทพฯ ไปเกาะเต่า พัสดุเดินทางในเครือข่ายเดียวกับรถและเรือโดยสาร ไม่ต้องต่อหลายบริษัท',
+        ],
+        ['h', '10. ค้นหาสาขาใกล้บ้านได้ง่าย'],
+        [
+          'p',
+          'ดูสาขาต้นทางในกรุงเทพฯ และสาขาปลายทางบนเกาะเต่าได้ที่หน้า "สาขา" ของเว็บ พร้อมแผนที่และเบอร์โทร',
+        ],
+        ['h', 'ก่อนส่ง เตรียมอะไรบ้าง'],
+        ['p', '• ชื่อ เลขบัตรประชาชน และเบอร์โทรของผู้ส่ง'],
+        ['p', '• ชื่อและเบอร์โทรของผู้รับ'],
+        ['p', '• แจ้งว่าในกล่องมีอะไร พนักงานอาจขอเปิดตรวจ'],
+        [
+          'p',
+          '• ห่อของเปราะบางให้แน่น บริษัทรับผิดชอบความเสียหายตามค่าส่งจริง สูงสุดไม่เกิน 500 บาท',
+        ],
+        ['p', 'อ่านเงื่อนไขทั้งหมดได้ที่หน้า "เงื่อนไขการส่งพัสดุ"'],
+      ],
+    },
+    en: {
+      title: '10 reasons to send parcels from Bangkok to Koh Tao',
+      excerpt:
+        'Going diving, staying long or running a shop on Koh Tao? Send your things ahead with Lomprayah Cargo and travel light.',
+      body: [
+        [
+          'p',
+          'Koh Tao is a small island in the Gulf of Thailand that people visit for diving, viewpoints and long stays. Carrying heavy bags onto a bus and then a ferry is no fun, so send them ahead with Lomprayah Cargo and travel light. Here are 10 reasons to do it.',
+        ],
+        ['h', '1. Heavy dive gear can be waiting for you'],
+        [
+          'p',
+          'Koh Tao is famous for diving and snorkelling, from Koh Nang Yuan to the bays around the island. Wetsuits, fins, masks and underwater cameras add up. Send them ahead and collect them at the destination branch; each item can weigh up to 30 kg.',
+        ],
+        ['h', '2. Travel light and skip excess baggage fees'],
+        [
+          'p',
+          'Passengers can bring 1 large suitcase of up to 20 kg on the bus and ferry; above that it costs 200 baht extra per bag. If you have a lot, sending some of it as a parcel makes the trip easier.',
+        ],
+        ['h', '3. Surfboards and kite boards are welcome'],
+        [
+          'p',
+          'Boards longer than 1 metre and up to 1.50 metres cost 400 baht on a bus + boat route, or 300 baht on a boat-only route.',
+        ],
+        ['h', '4. Bring a folding bike to ride around the island'],
+        [
+          'p',
+          'Koh Tao has small roads and plenty of viewpoints. A folding bicycle costs 700 baht on a bus + boat route or 500 baht boat-only. Folding bicycles only.',
+        ],
+        ['h', '5. Moving to Sairee Beach or working on the island'],
+        [
+          'p',
+          'Spending weeks on a dive course or moving to work on the island? Send your belongings box by box instead of carrying everything at once.',
+        ],
+        ['h', '6. Shops and resorts can order from Bangkok'],
+        [
+          'p',
+          'Some things are hard to find or cost more on the island. Shops, cafés and resorts can send dry goods, equipment and spare parts from Bangkok. Flammable items are not accepted, and the company is not liable for chilled or fresh food.',
+        ],
+        ['h', '7. Send gifts to people on the island'],
+        [
+          'p',
+          'Have friends or family on Koh Tao? Send them something from Bangkok. The recipient has 7 days to collect it from the branch.',
+        ],
+        ['h', '8. Track your parcel online all the way'],
+        [
+          'p',
+          'Enter the tracking number at www.lomprayahcargo.com, or scan the barcode on the label with your phone camera, to see where it is and whether it is on the boat yet.',
+        ],
+        ['h', '9. One network from Bangkok to the island'],
+        [
+          'p',
+          'Lomprayah runs both buses and ferries from Bangkok to Koh Tao, so your parcel travels on the same network as the passenger services, with no hand-offs between companies.',
+        ],
+        ['h', '10. Find a branch near you'],
+        [
+          'p',
+          'See the Bangkok origin branches and the Koh Tao destination branch on the Branches page, with maps and phone numbers.',
+        ],
+        ['h', 'What to prepare before sending'],
+        ['p', '• The sender’s name, ID card number and phone number'],
+        ['p', '• The recipient’s name and phone number'],
+        ['p', '• What is inside the box; staff may ask to open it for inspection'],
+        [
+          'p',
+          '• Pack fragile items well. The company is liable for damage up to the actual shipping price, at most 500 baht.',
+        ],
+        ['p', 'Read the full conditions on the Shipping terms page.'],
+      ],
+    },
+  },
   // Cargo news from the old lomprayah2.com site
   {
     slug: 'lomprayah-cargo-express-delivery',
