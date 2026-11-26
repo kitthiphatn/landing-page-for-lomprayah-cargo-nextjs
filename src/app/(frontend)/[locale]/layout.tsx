@@ -62,7 +62,12 @@ export async function generateMetadata({
       locale: locale === 'th' ? 'th_TH' : 'en_US',
       ...(logo && { images: [logo] }),
     },
-    alternates: { languages: { th: '/th', en: '/en' } },
+    // Pages that set their own alternates replace this; the home page relies on it. Without a
+    // canonical, Google reports the home page as "Duplicate without user-selected canonical".
+    alternates: {
+      canonical: `/${locale}`,
+      languages: { th: '/th', en: '/en', 'x-default': '/th' },
+    },
   }
 }
 
